@@ -1,0 +1,28 @@
+# Raíz
+.env
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node modules
+node_modules/
+
+# Dependencias específicas por carpeta
+client/node_modules/
+server/node_modules/
+
+# Build del frontend
+client/build/
+
+# Build del backend si llegás a tener
+server/dist/
+
+# Configuración local de editor
+.vscode/
+.idea/
+
+# Archivos del sistema
+Thumbs.db
+desktop.ini
