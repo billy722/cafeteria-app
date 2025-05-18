@@ -1,38 +1,21 @@
-import React from 'react';
-import './App.css';
-import ProductCard from './components/ProductCard';
+import React, {useState} from 'react';
+import TableSelector from './components/TableSelector';
+import OrderScreen from './components/OrderScreen';
 
-function App() {
-  const productos = [
-    {
-      name: 'Café Latte',
-      description: 'Café con leche espumosa',
-      price: 3.5,
-      image: 'https://www.peterjthomson.com/wp-content/uploads/2012/02/Flat-White-Cafe-London.jpg',
-    },
-    {
-      name: 'Té Verde',
-      description: 'Infusión de té verde japonés',
-      price: 2.0,
-      image: 'https://www.peterjthomson.com/wp-content/uploads/2012/02/Flat-White-Cafe-London.jpg',
-    },
-    {
-      name: 'Croissant',
-      description: 'Crujiente y mantecoso',
-      price: 2.5,
-      image: 'https://www.peterjthomson.com/wp-content/uploads/2012/02/Flat-White-Cafe-London.jpg',
-    },
-  ];
+function App(){
 
-  return (
-    <div className="App">
-      <h1>Menú de Cafetería</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {productos.map((producto, index) => (
-          <ProductCard key={index} {...producto} />
-        ))}
-      </div>
+  const [mesaSeleccionada, setMesaSeleccionada] = useState<String | null>(null);
+
+  return(
+
+    <div style={{ padding: '40px', fontFamily: 'sans-serif' }}>
+      {!mesaSeleccionada ? (
+        <TableSelector onSelect={(mesa) => setMesaSeleccionada(mesa)} />
+      ) : (
+        <OrderScreen table={mesaSeleccionada} onBack={() => setMesaSeleccionada(null) } />
+      )}
     </div>
+
   );
 }
 
