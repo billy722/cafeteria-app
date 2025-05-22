@@ -1,0 +1,21 @@
+.header{
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    /* background-color: #4e342e; */
+    background-color: #f7f7f7;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    height: 80px;
+    width: auto;
+    margin-right: 1rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Segoe UI', sans-serif;
+  }
