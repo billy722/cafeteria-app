@@ -14,4 +14,14 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Ruta para obtener todos los pedidos
+router.get('/', async (req, res) => {
+    try {
+      const pedidos = await Pedido.find(); // obtener todos los pedidos
+      res.json(pedidos); // enviar como JSON
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener los pedidos' });
+    }
+  });
+
 module.exports = router;
