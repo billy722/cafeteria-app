@@ -1,31 +1,38 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-function NuevoPedido({ onPedidoCreado }) {
-  const [mesa, setMesa] = useState('');
-  const [cliente, setCliente] = useState('');
-  const [hora, setHora] = useState('');
-  const [descripcion, setDescripcion] = useState('');
+function NuevoPedido() {
+  const [pedido, setPedido] = useState({
+    mesa: '',
+    cliente: '',
+    hora: '',
+    descripcion: '',
+  });
+
+  const handleChange = (e) => {
+    setPedido({ ...pedido, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nuevoPedido = { mesa, cliente, hora, descripcion };
+    try {
+      const response = await fetch('https://cafeteria-server-prod.onrender.com//api/pedidos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pedido),
+      });
 
-    const res = await fetch('https://cafeteria-server-prod.onrender.com/api/pedidos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevoPedido),
-    });
-
-    if (res.ok) {
-      onPedidoCreado(); // avisamos que hay un nuevo pedido
-      // limpiar los campos
-      setMesa('');
-      setCliente('');
-      setHora('');
-      setDescripcion('');
-    } else {
-      console.error('Error al guardar el pedido');
+      if (response.ok) {
+        alert('Pedido guardado correctamente');
+        setPedido({ mesa: '', cliente: '', hora: '', descripcion: '' });
+      } else {
+        alert('Error al guardar el pedido');
+      }
+    } catch (error) {
+      console.error('Error al enviar el pedido:', error);
+      alert('Hubo un error en la conexión con el servidor');
     }
   };
 
@@ -35,8 +42,8 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="mesa"
         placeholder="Mesa"
-        value={mesa}
-        onChange={e => setMesa(e.target.value)}
+        value={pedido.mesa}
+        onChange={handleChange}
         className="w-full border p-2 rounded"
         required
       />
@@ -44,8 +51,8 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="cliente"
         placeholder="Cliente"
-        value={cliente}
-        onChange={e => setCliente(e.target.value)}
+        value={pedido.cliente}
+        onChange={handleChange}
         className="w-full border p-2 rounded"
         required
       />
@@ -53,16 +60,16 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="hora"
         placeholder="Hora"
-        value={hora}
-        onChange={e => setHora(e.target.value)}
+        value={pedido.hora}
+        onChange={handleChange}
         className="w-full border p-2 rounded"
         required
       />
       <textarea
         name="descripcion"
         placeholder="Descripción"
-        value={descripcion}
-        onChange={e => setDescripcion(e.target.value)}
+        value={pedido.descripcion}
+        onChange={handleChange}
         className="w-full border p-2 rounded"
         rows={4}
         required

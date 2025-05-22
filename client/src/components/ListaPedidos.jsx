@@ -1,18 +1,19 @@
+// src/components/ListaPedidos.jsx
 import { useEffect, useState } from 'react';
 
-function ListaPedidos({ actualizar }) {
+function ListaPedidos() {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
-    fetch('https://cafeteria-server-prod.onrender.com/api/pedidos')
+    fetch('https://cafeteria-server-prod.onrender.com/api/pedidos') // <-- Cambia esto por tu backend real
       .then(res => res.json())
       .then(data => setPedidos(data))
-      .catch(err => console.error('Error al cargar pedidos:', err));
-  }, [actualizar]); // 👈 se actualiza cuando cambia la prop "actualizar"
+      .catch(error => console.error('Error al cargar pedidos:', error));
+  }, []);
 
   return (
-    <div>
-      <h2>Lista de pedidos</h2>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Listado de Pedidos</h2>
       <ul>
         {pedidos.map(pedido => (
           <li key={pedido._id}>

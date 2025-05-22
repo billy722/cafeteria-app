@@ -5,20 +5,16 @@ import ListaPedidos from './components/ListaPedidos';
 
 function App(){
 
-  const [actualizar, setActualizar] = useState(false);
-
-  const manejarNuevoPedido = () => {
-    setActualizar(!actualizar); // 👈 esto forzará la recarga
-  };  
-
+  const [mesa, setMesa] = useState(null);
+    
   return(
 
     <div>
       <Header/>
       <div>
         <h1 className="text-2xl font-bold text-center mt-4">Nuevo Pedido</h1>
-        <NuevoPedido onPedidoCreado={manejarNuevoPedido} />
-        <ListaPedidos actualizar={actualizar} />
+        <NuevoPedido />
+        <ListaPedidos />
       </div>
     </div>
       
