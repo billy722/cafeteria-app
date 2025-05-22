@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
-
-function NuevoPedido() {
-  const [pedido, setPedido] = useState({
-    mesa: '',
-    cliente: '',
-    hora: '',
-    descripcion: '',
-  });
-
-  const handleChange = (e) => {
-    setPedido({ ...pedido, [e.target.name]: e.target.value });
-  };
+function NuevoPedido({ onPedidoCreado }) {
+  const [mesa, setMesa] = useState('');
+  const [cliente, setCliente] = useState('');
+  const [hora, setHora] = useState('');
+  const [descripcion, setDescripcion] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('https://cafeteria-server-prod.onrender.com/api/pedidos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(pedido),
-      });
+    const nuevoPedido = { mesa, cliente, hora, descripcion };
 
-      if (response.ok) {
-        alert('Pedido guardado correctamente');
-        setPedido({ mesa: '', cliente: '', hora: '', descripcion: '' });
-      } else {
-        alert('Error al guardar el pedido');
-      }
-    } catch (error) {
-      console.error('Error al enviar el pedido:', error);
-      alert('Hubo un error en la conexión con el servidor');
+    const res = await fetch('https://cafeteria-server-prod.onrender.com/api/pedidos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nuevoPedido),
+    });
+
+    if (res.ok) {
+      onPedidoCreado(); // 👈 avisamos que hay un nuevo pedido
+      // opcional: limpiar los campos
+      setMesa('');
+      setCliente('');
+      setHora('');
+      setDescripcion('');
     }
   };
 
