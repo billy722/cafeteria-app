@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 
-function ListaPedidos() {
+function ListaPedidos({ actualizar }) {
   const [pedidos, setPedidos] = useState([]);
-  const [actualizar, setActualizar] = useState(false); // 👈 cambia cuando hay que recargar
 
   useEffect(() => {
-    fetch('https://TU_BACKEND.onrender.com/api/pedidos')
+    fetch('https://cafeteria-server-prod.onrender.com/api/pedidos')
       .then(res => res.json())
       .then(data => setPedidos(data))
-      .catch(err => console.error(err));
-  }, [actualizar]); // 👈 se ejecuta cuando "actualizar" cambia
+      .catch(err => console.error('Error al cargar pedidos:', err));
+  }, [actualizar]); // 👈 se actualiza cuando cambia la prop "actualizar"
 
   return (
     <div>

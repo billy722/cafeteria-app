@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 function NuevoPedido({ onPedidoCreado }) {
   const [mesa, setMesa] = useState('');
   const [cliente, setCliente] = useState('');
@@ -16,12 +18,14 @@ function NuevoPedido({ onPedidoCreado }) {
     });
 
     if (res.ok) {
-      onPedidoCreado(); // 👈 avisamos que hay un nuevo pedido
-      // opcional: limpiar los campos
+      onPedidoCreado(); // avisamos que hay un nuevo pedido
+      // limpiar los campos
       setMesa('');
       setCliente('');
       setHora('');
       setDescripcion('');
+    } else {
+      console.error('Error al guardar el pedido');
     }
   };
 
@@ -31,8 +35,8 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="mesa"
         placeholder="Mesa"
-        value={pedido.mesa}
-        onChange={handleChange}
+        value={mesa}
+        onChange={e => setMesa(e.target.value)}
         className="w-full border p-2 rounded"
         required
       />
@@ -40,8 +44,8 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="cliente"
         placeholder="Cliente"
-        value={pedido.cliente}
-        onChange={handleChange}
+        value={cliente}
+        onChange={e => setCliente(e.target.value)}
         className="w-full border p-2 rounded"
         required
       />
@@ -49,16 +53,16 @@ function NuevoPedido({ onPedidoCreado }) {
         type="text"
         name="hora"
         placeholder="Hora"
-        value={pedido.hora}
-        onChange={handleChange}
+        value={hora}
+        onChange={e => setHora(e.target.value)}
         className="w-full border p-2 rounded"
         required
       />
       <textarea
         name="descripcion"
         placeholder="Descripción"
-        value={pedido.descripcion}
-        onChange={handleChange}
+        value={descripcion}
+        onChange={e => setDescripcion(e.target.value)}
         className="w-full border p-2 rounded"
         rows={4}
         required

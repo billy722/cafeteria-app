@@ -17,8 +17,8 @@ function App(){
       <Header/>
       <div>
         <h1 className="text-2xl font-bold text-center mt-4">Nuevo Pedido</h1>
-      <NuevoPedido onPedidoCreado={manejarNuevoPedido} />
-      <ListaPedidos key={actualizar} />
+        <NuevoPedido onPedidoCreado={manejarNuevoPedido} />
+        <ListaPedidos actualizar={actualizar} />
       </div>
     </div>
       
