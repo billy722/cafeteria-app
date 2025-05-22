@@ -16,7 +16,7 @@ function NuevoPedido() {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://cafeteria-server-prod.onrender.com//api/pedidos', {
+      const response = await fetch('https://cafeteria-server-prod.onrender.com/api/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
