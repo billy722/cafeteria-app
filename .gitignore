@@ -19,6 +19,8 @@ server/.env
 
 # Build del frontend
 client/build/
+# Build del frontend
+client/dist/
 
 # Build del backend si llegás a tener
 server/dist/

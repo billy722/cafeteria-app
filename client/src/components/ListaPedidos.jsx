@@ -1,7 +1,7 @@
 // src/components/ListaPedidos.jsx
 import { useEffect, useState } from 'react';
 
-function ListaPedidos({ actualizar }) {
+function ListaPedidos({ actualizar, setActualizar }) {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {

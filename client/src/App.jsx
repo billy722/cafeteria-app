@@ -19,7 +19,7 @@ function App(){
       <div>
         <h1 className="text-2xl font-bold text-center mt-4">Nuevo Pedido</h1>
         <NuevoPedido onPedidoCreado={siNuevoPedidoCreado} />
-        <ListaPedidos actualizar={actualizar}/>
+        <ListaPedidos actualizar={actualizar} setActualizar={setActualizar}/>
       </div>
     </div>
       
