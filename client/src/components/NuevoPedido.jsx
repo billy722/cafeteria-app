@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function NuevoPedido() {
+function NuevoPedido({ onPedidoCreado }) {
   const [pedido, setPedido] = useState({
     mesa: '',
     cliente: '',
@@ -26,6 +26,7 @@ function NuevoPedido() {
 
       if (response.ok) {
         alert('Pedido guardado correctamente');
+        onPedidoCreado(); //LLAMO A LA FUNCION ACTUALIZAR
         setPedido({ mesa: '', cliente: '', hora: '', descripcion: '' });
       } else {
         alert('Error al guardar el pedido');

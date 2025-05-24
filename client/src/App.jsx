@@ -6,6 +6,11 @@ import ListaPedidos from './components/ListaPedidos';
 function App(){
 
   const [mesa, setMesa] = useState(null);
+  const [actualizar, setActualizar] = setState(false);
+
+  const siNuevoPedidoCreado = () => {
+    setActualizar(!actualizar);
+  };
     
   return(
 
@@ -13,8 +18,8 @@ function App(){
       <Header/>
       <div>
         <h1 className="text-2xl font-bold text-center mt-4">Nuevo Pedido</h1>
-        <NuevoPedido />
-        <ListaPedidos />
+        <NuevoPedido onPedidoCreado={siNuevoPedidoCreado} />
+        <ListaPedidos actualizar={actualizar}/>
       </div>
     </div>
       

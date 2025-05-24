@@ -1,7 +1,7 @@
 // src/components/ListaPedidos.jsx
 import { useEffect, useState } from 'react';
 
-function ListaPedidos() {
+function ListaPedidos({ actualizar }) {
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ function ListaPedidos() {
       .then(res => res.json())
       .then(data => setPedidos(data))
       .catch(error => console.error('Error al cargar pedidos:', error));
-  }, []);
+  }, [actualizar]);
 
   return (
     <div className="p-4">
