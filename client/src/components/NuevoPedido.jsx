@@ -71,7 +71,7 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
           required
         />
         <input
-          type="text"
+          type="time"
           name="hora"
           placeholder="Hora"
           value={pedido.hora}
