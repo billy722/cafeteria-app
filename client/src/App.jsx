@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Header from "./components/Header";
 import NuevoPedido from './components/NuevoPedido';
 import ListaPedidos from './components/ListaPedidos';
+import './App.css';
 
 function App(){
 
@@ -16,10 +17,13 @@ function App(){
 
     <div>
       <Header/>
-      <div>
-        <h1 className="text-2xl font-bold text-center mt-4">Nuevo Pedido</h1>
+      <div className='contenedor-principal'>
+
         <NuevoPedido onPedidoCreado={siNuevoPedidoCreado} />
-        <ListaPedidos actualizar={actualizar} setActualizar={setActualizar}/>
+        <div className='seccion-derecha'>
+          <ListaPedidos actualizar={actualizar} setActualizar={setActualizar}/>
+        </div>
+        
       </div>
     </div>
       

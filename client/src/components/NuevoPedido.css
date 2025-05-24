@@ -1,0 +1,38 @@
+.contenedor-formulario-pedido{
+    border-right: 1px solid #000000;
+    padding: 1rem;
+}
+.formulario-pedido {
+    max-width: 400px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formulario-pedido input,
+  .formulario-pedido textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  
+  .formulario-pedido button {
+    background-color: rgb(54, 141, 97);
+    width: 100%;
+    color: white;
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .formulario-pedido button:hover {
+    background-color: rgb(17, 101, 59);
+  }

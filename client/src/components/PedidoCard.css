@@ -1,0 +1,40 @@
+/* src/components/PedidoCard.css */
+.pedido-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    max-width: 400px;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    -ms-flex-align: stretch;
+    
+  }
+  
+  .pedido-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+  }
+  
+  .pedido-card p {
+    margin: 4px 0;
+    color: #333;
+  }
+
+  .btn-eliminar {
+    background-color: #611b03;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .btn-eliminar:hover {
+    background-color: #b71e06;
+  }

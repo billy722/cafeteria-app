@@ -1,0 +1,4 @@
+.lista-pedidos{
+    display: flex;
+    flex-wrap: wrap; /* Permite que pasen a otra línea si no caben */
+}
