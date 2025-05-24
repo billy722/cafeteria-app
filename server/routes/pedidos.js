@@ -34,6 +34,23 @@ router.get('/', async (req, res) => {
     }
   });
 
+// PUT /api/pedidos/:id
+router.put('/api/pedidos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pedidoActualizado = await Pedido.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
+    if (!pedidoActualizado) {
+      return res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+
+    res.json(pedidoActualizado);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar el pedido' });
+  }
+});
 
 module.exports = router;

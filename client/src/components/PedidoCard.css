@@ -7,11 +7,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: white;
     max-width: 400px;
-    width: 180px;
+    min-width: 180px;
     display: flex;
     flex-direction: column;
     -ms-flex-align: stretch;
     
+    overflow-wrap: break-word; /* Rompe palabras largas */
+    word-wrap: break-word;     /* Compatibilidad vieja */
+    word-break: break-word;
+    white-space: normal;       /* Permite saltos de línea */
   }
   
   .pedido-card h3 {
