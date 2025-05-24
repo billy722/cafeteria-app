@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './NuevoPedido.css';
 
-function NuevoPedido({ onPedidoCreado }) {
+function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
   const [pedido, setPedido] = useState({
     mesa: '',
     cliente: '',
     hora: '',
     descripcion: '',
   });
+
+  useEffect(() => {
+    if (pedidoInicial) {
+      setPedido(pedidoInicial); // ✨ llena el form si estamos editando
+    }
+  }, [pedidoInicial]);
 
   const handleChange = (e) => {
     setPedido({ ...pedido, [e.target.name]: e.target.value });
@@ -16,9 +22,15 @@ function NuevoPedido({ onPedidoCreado }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const url = pedido._id
+      ? `https://cafeteria-server-prod.onrender.com/api/pedidos/${pedido._id}`
+      : `https://cafeteria-server-prod.onrender.com/api/pedidos`;
+
+    const method = pedido._id ? 'PUT' : 'POST';
+
     try {
-      const response = await fetch('https://cafeteria-server-prod.onrender.com/api/pedidos', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -26,11 +38,11 @@ function NuevoPedido({ onPedidoCreado }) {
       });
 
       if (response.ok) {
-        alert('Pedido guardado correctamente');
-        onPedidoCreado(); //LLAMO A LA FUNCION ACTUALIZAR
+        alert(`Pedido ${pedido._id ? 'actualizado' : 'guardado'} correctamente`);
+        onPedidoCreado(); // Refrescar lista y limpiar formulario
         setPedido({ mesa: '', cliente: '', hora: '', descripcion: '' });
       } else {
-        alert('Error al guardar el pedido');
+        alert(`Error al ${pedido._id ? 'actualizar' : 'guardar'} el pedido`);
       }
     } catch (error) {
       console.error('Error al enviar el pedido:', error);
@@ -41,7 +53,7 @@ function NuevoPedido({ onPedidoCreado }) {
   return (
     <div className='contenedor-formulario-pedido'>
       <form onSubmit={handleSubmit} className="formulario-pedido">
-      <h2>Nuevo pedido</h2>
+        <h2>{pedido._id ? 'Editar pedido' : 'Nuevo pedido'}</h2>
         <input
           type="text"
           name="mesa"
@@ -74,9 +86,9 @@ function NuevoPedido({ onPedidoCreado }) {
           rows={4}
           required
         />
-        <button type="submit">Guardar</button>
+        <button type="submit">{pedido._id ? 'Actualizar' : 'Guardar'}</button>
       </form>
-    </div>  
+    </div>
   );
 }
 

@@ -6,22 +6,34 @@ import './App.css';
 
 function App(){
 
-  const [mesa, setMesa] = useState(null);
   const [actualizar, setActualizar] = useState(false);
+  const [pedidoEditando, setPedidoEditando] = useState(null); // ✨ nuevo
 
   const siNuevoPedidoCreado = () => {
     setActualizar(!actualizar);
+    setPedidoEditando(null); // Limpiar después de guardar
   };
     
+  const editarPedido = (pedido) => {
+    setPedidoEditando(pedido); // ✨ se setea el pedido que se editará
+  };
+
   return(
 
     <div>
       <Header/>
       <div className='contenedor-principal'>
 
-        <NuevoPedido onPedidoCreado={siNuevoPedidoCreado} />
+        <NuevoPedido 
+          onPedidoCreado={siNuevoPedidoCreado} 
+          pedidoInicial={pedidoEditando} // ✨ pasamos datos al form
+        />
         <div className='seccion-derecha'>
-          <ListaPedidos actualizar={actualizar} setActualizar={setActualizar}/>
+          <ListaPedidos 
+            actualizar={actualizar} 
+            setActualizar={setActualizar}
+            onEditar={editarPedido} // ✨ función para editar
+          />
         </div>
         
       </div>
