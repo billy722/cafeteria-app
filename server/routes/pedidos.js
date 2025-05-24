@@ -24,4 +24,16 @@ router.get('/', async (req, res) => {
     }
   });
 
+  // Ruta para eliminar un pedido por ID
+  router.delete('/:id', async (req, res) => {
+    try {
+      await Pedido.findByIdAndDelete(req.params.id);
+      res.status(200).json({ mensaje: 'Pedido eliminado' });
+    } catch (error) {
+      res.status(500).json({ mensaje: 'Error al eliminar el pedido', error });
+    }
+  });
+
+
+
 module.exports = router;

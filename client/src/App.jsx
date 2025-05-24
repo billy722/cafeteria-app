@@ -6,7 +6,7 @@ import ListaPedidos from './components/ListaPedidos';
 function App(){
 
   const [mesa, setMesa] = useState(null);
-  const [actualizar, setActualizar] = setState(false);
+  const [actualizar, setActualizar] = useState(false);
 
   const siNuevoPedidoCreado = () => {
     setActualizar(!actualizar);
