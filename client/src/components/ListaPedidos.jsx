@@ -31,14 +31,16 @@ function ListaPedidos({ actualizar, setActualizar, onEditar }) {
 
   return (
     <div className="lista-pedidos">
-      {pedidos.map(pedido => (
-        <PedidoCard
-          key={pedido._id}
-          pedido={pedido}
-          onEliminar={eliminarPedido}
-          onEditar={onEditar} // ✨ nuevo
-        />
-      ))}
+{pedidos
+  .filter(p => p.estado !== 'pagado')
+  .map(pedido => (
+    <PedidoCard
+      key={pedido._id}
+      pedido={pedido}
+      onEliminar={eliminarPedido}
+      onActualizarEstado={() => setActualizar(!actualizar)}
+    />
+))}
     </div>
   );
 }

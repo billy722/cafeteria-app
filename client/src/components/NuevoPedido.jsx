@@ -34,7 +34,7 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(pedido),
+        body: JSON.stringify({ ...pedido, estado: 'pendiente' }),
       });
 
       if (response.ok) {
