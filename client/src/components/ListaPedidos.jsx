@@ -37,6 +37,7 @@ function ListaPedidos({ actualizar, setActualizar, onEditar }) {
     <PedidoCard
       key={pedido._id}
       pedido={pedido}
+      onEditar={onEditar} // ✨ nuevo
       onEliminar={eliminarPedido}
       onActualizarEstado={() => setActualizar(!actualizar)}
     />

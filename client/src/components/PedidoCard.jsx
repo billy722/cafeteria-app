@@ -1,45 +1,47 @@
 // src/components/PedidoCard.jsx
 import './PedidoCard.css';
 
-function PedidoCard({ pedido, onEliminar, onActualizarEstado }) {
-  const { _id, mesa, cliente, hora, descripcion, estado } = pedido;
+function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado }) {
+  if (pedido.estado === 'pagado') {
+    return null; // no renderizar nada si el pedido está pagado
+  }
 
-  const getColorClase = () => {
-    if (estado === 'pendiente') return 'pendiente';
-    if (estado === 'entregado') return 'entregado';
-    return '';
-  };
-
-  const handleEstado = async () => {
-    const nuevoEstado = estado === 'pendiente' ? 'entregado' : 'pagado';
-
-    try {
-      const res = await fetch(`https://cafeteria-server-prod.onrender.com/api/pedidos/${_id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...pedido, estado: nuevoEstado }),
-      });
-
-      if (res.ok) onActualizarEstado();
-    } catch (error) {
-      console.error('Error al actualizar estado:', error);
+  const handleEliminar = () => {
+    if (window.confirm('¿Estás seguro de que querés eliminar este pedido?')) {
+      onEliminar(pedido._id);
     }
   };
 
-  const handleEliminar = () => {
-    if (window.confirm('¿Eliminar este pedido?')) onEliminar(_id);
+  const handleCambiarEstado = () => {
+    const nuevoEstado = pedido.estado === 'pendiente' ? 'entregado' : 'pagado';
+    onActualizarEstado(pedido._id, nuevoEstado);
   };
 
-  const textoBoton = estado === 'pendiente' ? 'Entregar' : 'Pagar';
+  const colorClase =
+    pedido.estado === 'pendiente'
+      ? 'pendiente'
+      : pedido.estado === 'entregado'
+      ? 'entregado'
+      : '';
 
   return (
-    <div className={`pedido-card ${getColorClase()}`}>
-      <h3>Mesa {mesa}</h3>
-      <p><strong>Cliente:</strong> {cliente}</p>
-      <p><strong>Hora:</strong> {hora}</p>
-      <pre><strong>Detalle:</strong> {descripcion}</pre>
-      <button onClick={handleEstado}>{textoBoton}</button>
-      <button onClick={handleEliminar} className="btn-eliminar">Eliminar</button>
+    <div className={`pedido-card ${colorClase}`}>
+      <h3>Mesa {pedido.mesa}</h3>
+      <p><strong>Cliente:</strong> {pedido.cliente}</p>
+      <p><strong>Hora:</strong> {pedido.hora}</p>
+      <pre><strong>Detalle:</strong> {pedido.descripcion}</pre>
+
+      <div className="botones">
+        <button
+          className={`btn-estado ${colorClase}`}
+          onClick={handleCambiarEstado}
+        >
+          {pedido.estado === 'pendiente' ? 'Entregar' : 'Pagar'}
+        </button>
+
+        <button onClick={() => setPedidoEditando(pedido)}>Editar</button>
+        <button onClick={handleEliminar} className="btn-eliminar">Eliminar</button>
+      </div>
     </div>
   );
 }

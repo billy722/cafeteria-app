@@ -27,11 +27,11 @@
   
   /* Colores según estado */
   .pedido-card.pendiente {
-    background-color: #ffe5b4; /* naranja claro */
+    background-color: #ece277; /* naranja claro */
   }
   
   .pedido-card.entregado {
-    background-color: #d4edda; /* verde claro */
+    background-color: #8cf1a3; /* verde claro */
   }
   
   .pedido-card h3 {
