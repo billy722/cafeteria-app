@@ -1,46 +1,38 @@
+// App.jsx
 import { useState } from 'react';
 import Header from "./components/Header";
 import NuevoPedido from './components/NuevoPedido';
 import ListaPedidos from './components/ListaPedidos';
 import './App.css';
 
-function App(){
-
+function App() {
   const [actualizar, setActualizar] = useState(false);
-  const [pedidoEditando, setPedidoEditando] = useState(null); // ✨ nuevo
+  const [pedidoEditando, setPedidoEditando] = useState(null);
 
   const siNuevoPedidoCreado = () => {
     setActualizar(!actualizar);
-    setPedidoEditando(null); // Limpiar después de guardar
-  };
-    
-  const editarPedido = (pedido) => {
-    setPedidoEditando(pedido); // ✨ se setea el pedido que se editará
+    setPedidoEditando(null); // limpiar después de editar
   };
 
-  return(
-
+  return (
     <div>
-      <Header/>
+      <Header />
       <div className='contenedor-principal'>
-
-        <NuevoPedido 
-          onPedidoCreado={siNuevoPedidoCreado} 
-          pedidoInicial={pedidoEditando} // ✨ pasamos datos al form
+        <NuevoPedido
+          onPedidoCreado={siNuevoPedidoCreado}
+          pedidoEditando={pedidoEditando}
+          setPedidoEditando={setPedidoEditando}
         />
         <div className='seccion-derecha'>
-          <ListaPedidos 
-            actualizar={actualizar} 
+          <ListaPedidos
+            actualizar={actualizar}
             setActualizar={setActualizar}
-            onEditar={editarPedido} // ✨ función para editar
+            setPedidoEditando={setPedidoEditando}
           />
         </div>
-        
       </div>
     </div>
-      
   );
-
 }
 
 export default App;

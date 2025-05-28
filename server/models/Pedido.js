@@ -2,7 +2,6 @@
 const mongoose = require('mongoose');
 
 const PedidoSchema = new mongoose.Schema({
-  mesa: String,
   cliente: String,
   hora: String,
   descripcion: String,

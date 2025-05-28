@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react';
+// NuevoPedido.jsx
+import React, { useState, useEffect } from 'react';
 import './NuevoPedido.css';
 
-function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
+function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   const [pedido, setPedido] = useState({
-    mesa: '',
     cliente: '',
     hora: '',
     descripcion: '',
+    estado: 'pendiente',
   });
 
   useEffect(() => {
-    if (pedidoInicial) {
-      setPedido(pedidoInicial); // ✨ llena el form si estamos editando
+    if (pedidoEditando) {
+      setPedido(pedidoEditando);
+    } else {
+      setPedido({
+        cliente: '',
+        hora: '',
+        descripcion: '',
+        estado: 'pendiente',
+      });
     }
-  }, [pedidoInicial]);
+  }, [pedidoEditando]);
 
   const handleChange = (e) => {
     setPedido({ ...pedido, [e.target.name]: e.target.value });
@@ -24,25 +32,24 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
 
     const url = pedido._id
       ? `https://cafeteria-server-prod.onrender.com/api/pedidos/${pedido._id}`
-      : `https://cafeteria-server-prod.onrender.com/api/pedidos`;
+      : 'https://cafeteria-server-prod.onrender.com/api/pedidos';
 
     const method = pedido._id ? 'PUT' : 'POST';
 
     try {
       const response = await fetch(url, {
-        method: method,
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...pedido, estado: 'pendiente' }),
+        body: JSON.stringify(pedido),
       });
 
       if (response.ok) {
-        alert(`Pedido ${pedido._id ? 'actualizado' : 'guardado'} correctamente`);
-        onPedidoCreado(); // Refrescar lista y limpiar formulario
-        setPedido({ mesa: '', cliente: '', hora: '', descripcion: '' });
+        alert(pedido._id ? 'Pedido actualizado' : 'Pedido creado');
+        onPedidoCreado();
       } else {
-        alert(`Error al ${pedido._id ? 'actualizar' : 'guardar'} el pedido`);
+        alert('Error al guardar el pedido');
       }
     } catch (error) {
       console.error('Error al enviar el pedido:', error);
@@ -50,18 +57,15 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
     }
   };
 
+  const cancelarEdicion = () => {
+    setPedidoEditando(null);
+  };
+
   return (
     <div className='contenedor-formulario-pedido'>
       <form onSubmit={handleSubmit} className="formulario-pedido">
         <h2>{pedido._id ? 'Editar pedido' : 'Nuevo pedido'}</h2>
-        <input
-          type="text"
-          name="mesa"
-          placeholder="Mesa"
-          value={pedido.mesa}
-          onChange={handleChange}
-          required
-        />
+
         <input
           type="text"
           name="cliente"
@@ -73,7 +77,6 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
         <input
           type="time"
           name="hora"
-          placeholder="Hora"
           value={pedido.hora}
           onChange={handleChange}
           required
@@ -86,7 +89,10 @@ function NuevoPedido({ onPedidoCreado, pedidoInicial }) {
           rows={4}
           required
         />
-        <button type="submit">{pedido._id ? 'Actualizar' : 'Guardar'}</button>
+        <button type="submit">
+          {pedido._id ? 'Actualizar' : 'Guardar'}
+        </button>
+        {pedido._id && <button type="button" onClick={cancelarEdicion}>Cancelar</button>}
       </form>
     </div>
   );

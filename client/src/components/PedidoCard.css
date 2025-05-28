@@ -44,8 +44,31 @@
     color: #333;
   }
 
+
+
+  .btn-estado {
+    background-color: rgb(54, 141, 97);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .btn-editar {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    cursor: pointer;
+    width: 100%;
+  }
   .btn-eliminar {
-    background-color: #611b03;
+    background-color: #ec521f;
     color: white;
     border: none;
     padding: 8px 12px;

@@ -26,7 +26,6 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
 
   return (
     <div className={`pedido-card ${colorClase}`}>
-      <h3>Mesa {pedido.mesa}</h3>
       <p><strong>Cliente:</strong> {pedido.cliente}</p>
       <p><strong>Hora:</strong> {pedido.hora}</p>
       <pre><strong>Detalle:</strong> {pedido.descripcion}</pre>
@@ -39,7 +38,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
           {pedido.estado === 'pendiente' ? 'Entregar' : 'Pagar'}
         </button>
 
-        <button onClick={() => setPedidoEditando(pedido)}>Editar</button>
+        <button onClick={() => setPedidoEditando(pedido)} className="btn-editar">Editar</button>
         <button onClick={handleEliminar} className="btn-eliminar">Eliminar</button>
       </div>
     </div>
