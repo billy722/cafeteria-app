@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const PedidoSchema = new mongoose.Schema({
   cliente: String,
   hora: String,
-  descripcion: String,
+  productos_meson: String,
+  productos_cocina: String,
   estado: {
     type: String,
     enum: ['pendiente', 'entregado', 'pagado'],

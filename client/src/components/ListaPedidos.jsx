@@ -8,10 +8,21 @@ function ListaPedidos({ actualizar, setActualizar, setPedidoEditando }) {
 
   // Cargar pedidos del servidor
   useEffect(() => {
-    fetch('https://cafeteria-server-prod.onrender.com/api/pedidos')
-      .then(res => res.json())
-      .then(data => setPedidos(data))
-      .catch(error => console.error('Error al cargar pedidos:', error));
+    const obtenerPedidos = () => {
+      fetch('https://cafeteria-server-prod.onrender.com/api/pedidos')
+        .then(res => res.json())
+        .then(data => setPedidos(data))
+        .catch(error => console.error('Error al cargar pedidos:', error));
+    };
+  
+    // Llamar inmediatamente al cargar
+    obtenerPedidos();
+  
+    // Luego configurar intervalo cada 5 segundos
+    const intervalo = setInterval(obtenerPedidos, 5000);
+  
+    // Limpiar el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalo);
   }, [actualizar]);
 
   // Eliminar un pedido

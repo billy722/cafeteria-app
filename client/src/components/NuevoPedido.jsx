@@ -81,10 +81,26 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           onChange={handleChange}
           required
         />
-        <textarea
+        {/* <textarea
           name="descripcion"
           placeholder="Descripción"
           value={pedido.descripcion}
+          onChange={handleChange}
+          rows={4}
+          required
+        /> */}
+        <textarea
+          name="productos_meson"
+          placeholder="Productos Mesón"
+          value={pedido.productos_meson}
+          onChange={handleChange}
+          rows={4}
+          required
+        />
+        <textarea
+          name="productos_cocina"
+          placeholder="Productos Cocina"
+          value={pedido.productos_cocina}
           onChange={handleChange}
           rows={4}
           required
