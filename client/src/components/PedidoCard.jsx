@@ -28,8 +28,8 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
     <div className={`pedido-card ${colorClase}`}>
       <p><strong>Cliente:</strong> {pedido.cliente}</p>
       <p><strong>Hora:</strong> {pedido.hora}</p>
-      <pre><strong>Productos Mesón:</strong> {pedido.productos_meson}</pre>
-      <pre><strong>Productos Cocina:</strong> {pedido.productos_cocina}</pre>
+      <pre><strong>Mesón: <br></br></strong> {pedido.productos_meson}</pre>
+      <pre><strong>Cocina: <br></br></strong> {pedido.productos_cocina}</pre>
 
       <div className="botones">
         <button

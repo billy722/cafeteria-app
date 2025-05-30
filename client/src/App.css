@@ -5,14 +5,23 @@ body{
 .contenedor-principal{
     background-color: rgb(57, 56, 56);
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 100%;
     gap: 1rem;
     padding: 1rem;
     box-sizing: border-box;
 }
 
 .seccion-derecha{
-    display: flex;
-    flex-wrap: wrap; /* Permite que pasen a otra línea si no caben */
-    gap: 1rem; /* Espacio entre las cards */
+  display: flex;
+  flex-wrap: wrap; /* Permite que pasen a otra línea si no caben */
+  gap: 1rem; /* Espacio entre las cards */
 }
+
+
+  @media (min-width: 768px) {
+    .contenedor-principal {
+        grid-template-columns: 20% 80%;
+    }
+  }
+
+

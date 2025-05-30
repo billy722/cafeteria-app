@@ -6,8 +6,7 @@
     margin: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: white;
-    max-width: 400px;
-    min-width: 180px;
+    min-width: 80%;
     display: flex;
     flex-direction: column;
     -ms-flex-align: stretch;
@@ -17,6 +16,14 @@
     word-break: break-word;
     white-space: normal;       /* Permite saltos de línea */
   }
+
+  @media (min-width: 768px) {
+    .pedido-card {
+      max-width: 400px;
+      min-width: 180px;
+    }
+  }
+
 
   .pedido-card {
     border: 1px solid #ccc;
