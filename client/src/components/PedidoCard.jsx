@@ -54,9 +54,8 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
                 <div class="linea"></div>
                 <p><strong>Pedido:</strong> ${pedido.cliente}</p>
                 <ul>
-                  $1.000 x 10
-                  $1.000 x 10
-                  $1.000 x 10
+                  <pre>${pedido.productos_meson}</pre>
+                  <pre>${pedido.productos_cocina}</pre>
                 </ul>
                 <div class="linea"></div>
                 <p>Total: 123123</p>
