@@ -46,6 +46,33 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
                   border-top: 1px dashed #000;
                   margin: 10px 0;
                 }
+
+                @media print {
+                  body {
+                    margin: 0;
+                    padding: 0;
+                  }
+
+                  .ticket {
+                    width: 58mm;
+                    max-width: 100%;
+                    padding: 5mm;
+                    font-family: monospace;
+                    font-size: 12px;
+                  }
+
+                  /* Evita saltos innecesarios */
+                  html, body {
+                    height: auto;
+                    overflow: hidden;
+                  }
+
+                  /* Elimina cualquier elemento que no quieras imprimir */
+                  .no-imprimir {
+                    display: none !important;
+                  }
+                }
+
               </style>
             </head>
             <body>
