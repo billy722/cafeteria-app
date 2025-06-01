@@ -24,6 +24,58 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       ? 'entregado'
       : '';
 
+      const handleImprimir = (pedido) => {
+        const ventana = window.open('', '', 'width=300,height=600');
+      
+        const contenido = `
+          <html>
+            <head>
+              <title>Cuenta</title>
+              <style>
+                body {
+                  font-family: monospace;
+                  font-size: 12px;
+                  padding: 5px;
+                  margin: 0;
+                }
+                .ticket {
+                  width: 58mm; /* Aquí defines el ancho real del papel */
+                  max-width: 100%;
+                }
+                .linea {
+                  border-top: 1px dashed #000;
+                  margin: 10px 0;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="ticket">
+                <h3>Cafetería Magnolia</h3>
+                <div class="linea"></div>
+                <p><strong>Pedido:</strong> ${pedido.cliente}</p>
+                <ul>
+                  $1.000 x 10
+                  $1.000 x 10
+                  $1.000 x 10
+                </ul>
+                <div class="linea"></div>
+                <p>Total: 123123</p>
+              </div>
+              <script>
+                window.onload = function() {
+                  window.print();
+                  window.close();
+                };
+              </script>
+            </body>
+          </html>
+        `;
+      
+        ventana.document.open();
+        ventana.document.write(contenido);
+        ventana.document.close(); // MUY IMPORTANTE
+      };
+      
   return (
     <div className={`pedido-card ${colorClase}`}>
       <p><strong>Cliente:</strong> {pedido.cliente}</p>
@@ -40,6 +92,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
         </button>
 
         <button onClick={() => setPedidoEditando(pedido)} className="btn-editar">Editar</button>
+        <button onClick={() => handleImprimir(pedido) } className="btn-imprimir">Imprimir</button>
         <button onClick={handleEliminar} className="btn-eliminar">Eliminar</button>
       </div>
     </div>
