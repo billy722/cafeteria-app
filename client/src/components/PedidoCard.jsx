@@ -40,7 +40,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
                 }
                 .ticket {
                   width: 58mm; /* Aquí defines el ancho real del papel */
-                  max-width: 100%;
+                  width: 100%;
                 }
                 .linea {
                   border-top: 1px dashed #000;
@@ -77,15 +77,18 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
             </head>
             <body>
               <div class="ticket">
-                <h3>Cafetería Magnolia</h3>
+                <h3>Ruka Magnolia</h3>
                 <div class="linea"></div>
-                <p><strong>Pedido:</strong> ${pedido.cliente}</p>
-                <ul>
-                  <pre>${pedido.productos_meson}</pre>
-                  <pre>${pedido.productos_cocina}</pre>
-                </ul>
+                <p><strong>Cliente:</strong> ${pedido.cliente}</p>
                 <div class="linea"></div>
-                <p>Total: 123123</p>
+                <p><strong>Productos:</strong></p>
+                <pre>${pedido.productos_meson}</pre>
+                <pre>${pedido.productos_cocina}</pre>
+                <div class="linea"></div>
+                <p><strong>Total:</strong> </p>
+                <div class="linea"></div>
+                <p><strong>!Gracias por su visita¡</strong> </p>
+
               </div>
               <script>
                 window.onload = function() {
@@ -104,10 +107,13 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       
   return (
     <div className={`pedido-card ${colorClase}`}>
-      <p><strong>Cliente:</strong> {pedido.cliente}</p>
-      <p><strong>Hora:</strong> {pedido.hora}</p>
-      <pre><strong>Mesón: <br></br></strong> {pedido.productos_meson}</pre>
-      <pre><strong>Cocina: <br></br></strong> {pedido.productos_cocina}</pre>
+      <p><strong>CLIENTE: {pedido.cliente}</strong></p>
+      <p>-------------------------------------------------</p>
+      <p><strong>HORA: {pedido.hora}</strong></p>
+      <p>-------------------------------------------------</p>
+      <pre><strong>MESÓN: <br></br></strong>{pedido.productos_meson}</pre>
+      <p>-------------------------------------------------</p>
+      <pre><strong>COCINA: <br></br></strong>{pedido.productos_cocina}</pre>
 
       <div className="botones">
         <button

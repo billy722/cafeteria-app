@@ -1,0 +1,15 @@
+.contenedor_principal{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    flex-align: end;
+}
+
+.layout_pagina{
+    padding: 10px;
+    flex:1;
+}
+
+.footer{
+
+}

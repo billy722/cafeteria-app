@@ -1,0 +1,11 @@
+body{
+    margin: 0;
+    background-color: #191919;
+    color: wheat;
+    height: 100vh;
+}
+
+#root{
+    height: 100vh;
+
+}
