@@ -95,7 +95,6 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           value={pedido.productos_meson}
           onChange={handleChange}
           rows={4}
-          required
         />
         <textarea
           name="productos_cocina"
@@ -103,7 +102,6 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           value={pedido.productos_cocina}
           onChange={handleChange}
           rows={4}
-          required
         />
         <button type="submit">
           {pedido._id ? 'Actualizar' : 'Guardar'}
