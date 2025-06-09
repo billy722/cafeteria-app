@@ -14,6 +14,9 @@ app.use(express.json());
 const pedidosRoute = require('./routes/pedidos');
 app.use('/api/pedidos', pedidosRoute);
 
+const productosRoutes = require('./routes/productos');
+app.use('/api/productos', productosRoutes);
+
 // MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))

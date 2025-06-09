@@ -103,6 +103,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           onChange={handleChange}
           rows={4}
         />
+
         <button type="submit">
           {pedido._id ? 'Actualizar' : 'Guardar'}
         </button>

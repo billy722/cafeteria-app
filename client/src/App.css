@@ -20,7 +20,7 @@ body{
 
   @media (min-width: 768px) {
     .contenedor-principal {
-        grid-template-columns: 30% 70%;
+        grid-template-columns: 40% 70%;
     }
   }
 
