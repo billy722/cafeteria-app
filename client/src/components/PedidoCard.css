@@ -34,7 +34,7 @@
   
   /* Colores según estado */
   .pedido-card.pendiente {
-    background-color: #ece277; /* naranja claro */
+    background-color: #b2b2b2; /* naranja claro */
   }
   
   .pedido-card.entregado {

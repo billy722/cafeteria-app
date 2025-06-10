@@ -50,7 +50,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
       cantidad: Number(cantidad),
     };
 
-    const key = producto.lugar_preparacion === 'meson' ? 'productos_meson' : 'productos_cocina';
+    const key = producto.lugar_preparacion === 'Mesón' ? 'productos_meson' : 'productos_cocina';
     setPedido(prev => ({
       ...prev,
       [key]: [...prev[key], nuevoProducto]
@@ -62,7 +62,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   };
 
   const handleEliminarProducto = (id, lugar) => {
-    const key = lugar === 'meson' ? 'productos_meson' : 'productos_cocina';
+    const key = lugar === 'Mesón' ? 'productos_meson' : 'productos_cocina';
     setPedido(prev => ({
       ...prev,
       [key]: prev[key].filter(p => p._id !== id)
@@ -70,7 +70,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   };
 
   const handleModificarCantidad = (id, lugar, nuevaCantidad) => {
-    const key = lugar === 'meson' ? 'productos_meson' : 'productos_cocina';
+    const key = lugar === 'Mesón' ? 'productos_meson' : 'productos_cocina';
     setPedido(prev => ({
       ...prev,
       [key]: prev[key].map(p =>
@@ -121,7 +121,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
     <ul>
       {lista.map(p => (
         <li key={p._id}>
-          <span>{p.nombre}</span> - 
+          
           <input
             type="number"
             value={p.cantidad}
@@ -131,7 +131,8 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
             }
             style={{ width: '50px', margin: '0 5px' }}
           />
-          × ${p.precio} = ${p.precio * p.cantidad}
+          <span>{p.nombre}</span>  
+          {/* × ${p.precio} = ${p.precio * p.cantidad} */}
           <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)} >
             X
           </button>
@@ -175,7 +176,8 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           <option value="">-- Selecciona un producto --</option>
           {productosFiltrados.map(p => (
             <option key={p._id} value={p._id}>
-              {p.nombre} - ${p.precio}
+              {p.nombre} 
+              {/* {p.nombre} - ${p.precio} */}
             </option>
           ))}
         </select>
@@ -186,10 +188,10 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           onChange={(e) => setCantidad(e.target.value)}
           placeholder="Cantidad"
         />
-        <button type="button" onClick={handleAgregarProducto}>Agregar</button>
+        <button type="button" onClick={handleAgregarProducto}>Agregar Producto</button>
 
         <h4>Productos Mesón</h4>
-        {renderListaProductos(pedido.productos_meson, 'meson')}
+        {renderListaProductos(pedido.productos_meson, 'Mesón')}
 
         <h4>Productos Cocina</h4>
         {renderListaProductos(pedido.productos_cocina, 'cocina')}
