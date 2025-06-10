@@ -6,9 +6,22 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   const [pedido, setPedido] = useState({
     cliente: '',
     hora: '',
-    descripcion: '',
+    productos_meson: [],
+    productos_cocina: [],
     estado: 'pendiente',
   });
+
+  const [productos, setProductos] = useState([]);
+  const [filtro, setFiltro] = useState('');
+  const [productoSeleccionado, setProductoSeleccionado] = useState('');
+  const [cantidad, setCantidad] = useState(1);
+
+  useEffect(() => {
+    fetch('https://cafeteria-server-prod.onrender.com/api/productos')
+      .then(res => res.json())
+      .then(data => setProductos(data))
+      .catch(err => console.error('Error al obtener productos', err));
+  }, []);
 
   useEffect(() => {
     if (pedidoEditando) {
@@ -17,7 +30,8 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
       setPedido({
         cliente: '',
         hora: '',
-        descripcion: '',
+        productos_meson: [],
+        productos_cocina: [],
         estado: 'pendiente',
       });
     }
@@ -25,6 +39,44 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
 
   const handleChange = (e) => {
     setPedido({ ...pedido, [e.target.name]: e.target.value });
+  };
+
+  const handleAgregarProducto = () => {
+    const producto = productos.find(p => p._id === productoSeleccionado);
+    if (!producto) return;
+
+    const nuevoProducto = {
+      ...producto,
+      cantidad: Number(cantidad),
+    };
+
+    const key = producto.lugar_preparacion === 'meson' ? 'productos_meson' : 'productos_cocina';
+    setPedido(prev => ({
+      ...prev,
+      [key]: [...prev[key], nuevoProducto]
+    }));
+
+    // Limpiar selección
+    setProductoSeleccionado('');
+    setCantidad(1);
+  };
+
+  const handleEliminarProducto = (id, lugar) => {
+    const key = lugar === 'meson' ? 'productos_meson' : 'productos_cocina';
+    setPedido(prev => ({
+      ...prev,
+      [key]: prev[key].filter(p => p._id !== id)
+    }));
+  };
+
+  const handleModificarCantidad = (id, lugar, nuevaCantidad) => {
+    const key = lugar === 'meson' ? 'productos_meson' : 'productos_cocina';
+    setPedido(prev => ({
+      ...prev,
+      [key]: prev[key].map(p =>
+        p._id === id ? { ...p, cantidad: Number(nuevaCantidad) } : p
+      )
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -61,8 +113,35 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
     setPedidoEditando(null);
   };
 
+  const productosFiltrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(filtro.toLowerCase())
+  );
+
+  const renderListaProductos = (lista, lugar) => (
+    <ul>
+      {lista.map(p => (
+        <li key={p._id}>
+          <span>{p.nombre}</span> - 
+          <input
+            type="number"
+            value={p.cantidad}
+            min={1}
+            onChange={(e) =>
+              handleModificarCantidad(p._id, lugar, e.target.value)
+            }
+            style={{ width: '50px', margin: '0 5px' }}
+          />
+          × ${p.precio} = ${p.precio * p.cantidad}
+          <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)} >
+            X
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <div className='contenedor-formulario-pedido'>
+    <div className="contenedor-formulario-pedido">
       <form onSubmit={handleSubmit} className="formulario-pedido">
         <h2>{pedido._id ? 'Editar pedido' : 'Nuevo pedido'}</h2>
 
@@ -81,33 +160,44 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           onChange={handleChange}
           required
         />
-        {/* <textarea
-          name="descripcion"
-          placeholder="Descripción"
-          value={pedido.descripcion}
-          onChange={handleChange}
-          rows={4}
-          required
-        /> */}
-        <textarea
-          name="productos_meson"
-          placeholder="Productos Mesón"
-          value={pedido.productos_meson}
-          onChange={handleChange}
-          rows={4}
-        />
-        <textarea
-          name="productos_cocina"
-          placeholder="Productos Cocina"
-          value={pedido.productos_cocina}
-          onChange={handleChange}
-          rows={4}
-        />
 
-        <button type="submit">
-          {pedido._id ? 'Actualizar' : 'Guardar'}
-        </button>
-        {pedido._id && <button type="button" onClick={cancelarEdicion}>Cancelar</button>}
+        <h3>Agregar productos</h3>
+        <input
+          type="text"
+          placeholder="Buscar producto..."
+          value={filtro}
+          onChange={(e) => setFiltro(e.target.value)}
+        />
+        <select
+          value={productoSeleccionado}
+          onChange={(e) => setProductoSeleccionado(e.target.value)}
+        >
+          <option value="">-- Selecciona un producto --</option>
+          {productosFiltrados.map(p => (
+            <option key={p._id} value={p._id}>
+              {p.nombre} - ${p.precio}
+            </option>
+          ))}
+        </select>
+        <input
+          type="number"
+          min={1}
+          value={cantidad}
+          onChange={(e) => setCantidad(e.target.value)}
+          placeholder="Cantidad"
+        />
+        <button type="button" onClick={handleAgregarProducto}>Agregar</button>
+
+        <h4>Productos Mesón</h4>
+        {renderListaProductos(pedido.productos_meson, 'meson')}
+
+        <h4>Productos Cocina</h4>
+        {renderListaProductos(pedido.productos_cocina, 'cocina')}
+
+        <button type="submit">{pedido._id ? 'Actualizar' : 'Guardar'}</button>
+        {pedido._id && (
+          <button type="button" onClick={cancelarEdicion}>Cancelar</button>
+        )}
       </form>
     </div>
   );

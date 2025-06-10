@@ -11,6 +11,7 @@
   }
   
   .formulario-pedido input,
+  .formulario-pedido select,
   .formulario-pedido textarea {
     width: 100%;
     padding: 10px 12px;
@@ -29,6 +30,19 @@
     font-size: 16px;
     border: none;
     border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .boton-x{
+    background-color: rgb(188, 48, 48) !important;
+    width: auto !important; 
+    color: white;
+    padding: 5px !important;
+    font-size: 12px !important;
+    margin-left: 10px !important;
+    border: none;
+    border-radius: 0px !important;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
   }
