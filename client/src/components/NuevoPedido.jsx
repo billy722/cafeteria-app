@@ -56,7 +56,6 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
       [key]: [...prev[key], nuevoProducto]
     }));
 
-    // Limpiar selección
     setProductoSeleccionado('');
     setCantidad(1);
   };
@@ -100,6 +99,19 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
       if (response.ok) {
         alert(pedido._id ? 'Pedido actualizado' : 'Pedido creado');
         onPedidoCreado();
+
+        // 🔽 Limpiar formulario
+        setPedido({
+          cliente: '',
+          hora: '',
+          productos_meson: [],
+          productos_cocina: [],
+          estado: 'pendiente',
+        });
+        setFiltro('');
+        setProductoSeleccionado('');
+        setCantidad(1);
+        setPedidoEditando(null);
       } else {
         alert('Error al guardar el pedido');
       }
@@ -121,7 +133,6 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
     <ul>
       {lista.map(p => (
         <li key={p._id}>
-          
           <input
             type="number"
             value={p.cantidad}
@@ -131,9 +142,8 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
             }
             style={{ width: '50px', margin: '0 5px' }}
           />
-          <span>{p.nombre}</span>  
-          {/* × ${p.precio} = ${p.precio * p.cantidad} */}
-          <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)} >
+          <span>{p.nombre}</span>
+          <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
             X
           </button>
         </li>
@@ -176,8 +186,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           <option value="">-- Selecciona un producto --</option>
           {productosFiltrados.map(p => (
             <option key={p._id} value={p._id}>
-              {p.nombre} 
-              {/* {p.nombre} - ${p.precio} */}
+              {p.nombre}
             </option>
           ))}
         </select>
