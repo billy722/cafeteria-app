@@ -1,4 +1,10 @@
-button{
+.boton-mesa{
     height: 100px;
     width: 100px;
+
+}
+
+.contenedor-formulario{
+    display: grid;
+    grid-template-columns: 30% 70%;
 }
