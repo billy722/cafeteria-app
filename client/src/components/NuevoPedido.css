@@ -1,6 +1,6 @@
 .contenedor-formulario-pedido{
     /* border-right: 1px solid #000000; */
-    padding: 1rem;
+    padding: 1px;
 }
 .formulario-pedido {
     max-width: 400px;
@@ -8,6 +8,10 @@
     background-color: #f9fafb;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
   
   .formulario-pedido input,
@@ -28,10 +32,12 @@
     color: white;
     padding: 10px 16px;
     font-size: 16px;
-    border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
 
   .boton-x{
@@ -55,7 +61,14 @@
     background-color: #b1c5b1;
     padding: 10px;
     border-radius: 5px;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
   .contenedor-agregar-productos button{
-    background-color: #f0aa1d;
+    background-color: #faac2e;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }

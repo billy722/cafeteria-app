@@ -15,12 +15,14 @@
     word-wrap: break-word;     /* Compatibilidad vieja */
     word-break: break-word;
     white-space: normal;       /* Permite saltos de línea */
+
   }
 
   @media (min-width: 768px) {
     .pedido-card {
       max-width: 400px;
       min-width: 180px;
+      
     }
   }
 
@@ -30,15 +32,19 @@
     padding: 1rem;
     margin-bottom: 1rem;
     border-radius: 8px;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
   
   /* Colores según estado */
   .pedido-card.pendiente {
-    background-color: #b2b2b2; /* naranja claro */
+    background-color: #b1c5b1;
   }
   
   .pedido-card.entregado {
-    background-color: #8cf1a3; /* verde claro */
+    background-color: #adb3ae; /* verde claro */
   }
   
   .pedido-card h3 {
@@ -62,6 +68,10 @@
     margin-top: 8px;
     cursor: pointer;
     width: 100%;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
 
   .btn-editar {
@@ -73,6 +83,10 @@
     margin-top: 8px;
     cursor: pointer;
     width: 100%;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
   .btn-imprimir {
     background-color: #ffffff;
@@ -83,9 +97,13 @@
     margin-top: 8px;
     cursor: pointer;
     width: 100%;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
   }
   .btn-eliminar {
-    background-color: #ec521f;
+    background-color: #000000;
     color: white;
     border: none;
     padding: 8px 12px;
