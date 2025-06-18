@@ -1,15 +1,21 @@
-// NuevoPedido.jsx
 import React, { useState, useEffect } from 'react';
 import './NuevoPedido.css';
 
 function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
+  const obtenerHoraActual = () => {
+    const ahora = new Date();
+    return ahora.getHours().toString().padStart(2, '0') + ":" + ahora.getMinutes().toString().padStart(2, '0');
+  };
+
   const [pedido, setPedido] = useState({
     cliente: '',
-    hora: '',
+    hora: obtenerHoraActual(),
     productos_meson: [],
     productos_cocina: [],
     estado: 'pendiente',
   });
+
+  const [horaManual, setHoraManual] = useState(false);
 
   const [productos, setProductos] = useState([]);
   const [filtro, setFiltro] = useState('');
@@ -17,6 +23,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   const [cantidad, setCantidad] = useState(1);
   const [observacion, setObservacion] = useState('');
 
+  // Cargar productos al montar
   useEffect(() => {
     fetch('https://cafeteria-server-prod.onrender.com/api/productos')
       .then(res => res.json())
@@ -24,22 +31,45 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
       .catch(err => console.error('Error al obtener productos', err));
   }, []);
 
+  // Al recibir un pedido para editar
   useEffect(() => {
     if (pedidoEditando) {
       setPedido(pedidoEditando);
+      setHoraManual(true); // Desactiva actualización automática porque estás editando
     } else {
       setPedido({
         cliente: '',
-        hora: '',
+        hora: obtenerHoraActual(),
         productos_meson: [],
         productos_cocina: [],
         estado: 'pendiente',
       });
+      setHoraManual(false); // Nuevo pedido, sí actualizamos hora automáticamente
     }
   }, [pedidoEditando]);
 
+  // Actualizar la hora cada minuto (solo si no se modificó manualmente y no estamos editando)
+  useEffect(() => {
+    if (horaManual) return; // No actualizar si usuario cambió la hora manualmente
+
+    const intervalo = setInterval(() => {
+      setPedido(prevPedido => ({
+        ...prevPedido,
+        hora: obtenerHoraActual()
+      }));
+    }, 30000); // cada 1 minuto
+
+    return () => clearInterval(intervalo);
+  }, [horaManual]);
+
   const handleChange = (e) => {
-    setPedido({ ...pedido, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'hora') {
+      setHoraManual(true); // Usuario modificó la hora manualmente
+    }
+
+    setPedido(prev => ({ ...prev, [name]: value }));
   };
 
   const handleAgregarProducto = () => {
@@ -49,7 +79,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
     const nuevoProducto = {
       ...producto,
       cantidad: Number(cantidad),
-      observacion: observacion.trim(), // si está vacío no pasa nada
+      observacion: observacion.trim(),
     };
 
     const key = producto.lugar_preparacion === 'Mesón' ? 'productos_meson' : 'productos_cocina';
@@ -103,10 +133,10 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
         alert(pedido._id ? 'Pedido actualizado' : 'Pedido creado');
         onPedidoCreado();
 
-        // 🔽 Limpiar formulario
+        // Limpiar formulario y reactivar actualización automática de hora
         setPedido({
           cliente: '',
-          hora: '',
+          hora: obtenerHoraActual(),
           productos_meson: [],
           productos_cocina: [],
           estado: 'pendiente',
@@ -114,7 +144,9 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
         setFiltro('');
         setProductoSeleccionado('');
         setCantidad(1);
+        setObservacion('');
         setPedidoEditando(null);
+        setHoraManual(false); // Reactivar actualización automática
       } else {
         alert('Error al guardar el pedido');
       }
@@ -126,6 +158,11 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
 
   const cancelarEdicion = () => {
     setPedidoEditando(null);
+    setHoraManual(false); // Reactivar actualización automática
+    setPedido(prev => ({
+      ...prev,
+      hora: obtenerHoraActual(),
+    }));
   };
 
   const productosFiltrados = productos.filter(p =>
@@ -133,30 +170,30 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   );
 
   const renderListaProductos = (lista, lugar) => (
-  <ul>
-    {lista.map(p => (
-      <li key={p._id}>
-        <input
-          type="number"
-          value={p.cantidad}
-          min={1}
-          onChange={(e) =>
-            handleModificarCantidad(p._id, lugar, e.target.value)
-          }
-          style={{ width: '50px', margin: '0 5px' }}
-        />
-        <span>{p.nombre}</span>
-        {p.observacion && (
-          <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
-            ({p.observacion})
-          </span>
-        )}
-        <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
-          x
-        </button>
-      </li>
-    ))}
-  </ul>
+    <ul>
+      {lista.map(p => (
+        <li key={p._id}>
+          <input
+            type="number"
+            value={p.cantidad}
+            min={1}
+            onChange={(e) =>
+              handleModificarCantidad(p._id, lugar, e.target.value)
+            }
+            style={{ width: '50px', margin: '0 5px' }}
+          />
+          <span>{p.nombre}</span>
+          {p.observacion && (
+            <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
+              ({p.observacion})
+            </span>
+          )}
+          <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
+            x
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 
   return (
@@ -180,38 +217,40 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           required
         />
 
-        <h3>Agregar productos</h3>
-        <input
-          type="text"
-          placeholder="Buscar producto..."
-          value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
-        />
-        <select
-          value={productoSeleccionado}
-          onChange={(e) => setProductoSeleccionado(e.target.value)}
-        >
-          <option value="">-- Selecciona un producto --</option>
-          {productosFiltrados.map(p => (
-            <option key={p._id} value={p._id}>
-              {p.nombre}
-            </option>
-          ))}
-        </select>
-        <input
-          type="number"
-          min={1}
-          value={cantidad}
-          onChange={(e) => setCantidad(e.target.value)}
-          placeholder="Cantidad"
-        />
-        <input
-          type="text"
-          value={observacion}
-          onChange={(e) => setObservacion(e.target.value)}
-          placeholder="Observación (opcional)"
-        />
-        <button type="button" onClick={handleAgregarProducto}>Agregar Producto</button>
+        <div className='contenedor-agregar-productos'>
+          <h3>Agregar productos</h3>
+          <input
+            type="text"
+            placeholder="Buscar producto..."
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+          <select
+            value={productoSeleccionado}
+            onChange={(e) => setProductoSeleccionado(e.target.value)}
+          >
+            <option value="">-- Selecciona un producto --</option>
+            {productosFiltrados.map(p => (
+              <option key={p._id} value={p._id}>
+                {p.nombre}
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            min={1}
+            value={cantidad}
+            onChange={(e) => setCantidad(e.target.value)}
+            placeholder="Cantidad"
+          />
+          <input
+            type="text"
+            value={observacion}
+            onChange={(e) => setObservacion(e.target.value)}
+            placeholder="Observación (opcional)"
+          />
+          <button type="button" onClick={handleAgregarProducto}>Agregar Producto</button>
+        </div>
 
         <h4>Productos Mesón</h4>
         {renderListaProductos(pedido.productos_meson, 'Mesón')}

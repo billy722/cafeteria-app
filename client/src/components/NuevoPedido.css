@@ -50,3 +50,12 @@
   .formulario-pedido button:hover {
     background-color: rgb(17, 101, 59);
   }
+
+  .contenedor-agregar-productos{
+    background-color: #b1c5b1;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .contenedor-agregar-productos button{
+    background-color: #f0aa1d;
+  }
