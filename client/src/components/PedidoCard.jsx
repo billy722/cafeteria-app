@@ -109,6 +109,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       <p>-------------------------------------------------</p>
       <p><strong>HORA: {pedido.hora}</strong></p>
       <p>-------------------------------------------------</p>
+
       {pedido.productos_meson.length > 0 && (
         <>
           <p><strong>MESÓN:</strong></p>
@@ -116,6 +117,11 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
             {pedido.productos_meson.map((p, i) => (
               <li key={p._id || `meson-${i}`}>
                 {p.cantidad} x {p.nombre}
+                {p.observacion && (
+                  <span style={{ marginLeft: '5px', fontStyle: 'italic' }}>
+                    ({p.observacion})
+                  </span>
+                )}
               </li>
             ))}
           </ul>
@@ -129,11 +135,17 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
             {pedido.productos_cocina.map((p, i) => (
               <li key={p._id || `cocina-${i}`}>
                 {p.cantidad} x {p.nombre}
+                {p.observacion && (
+                  <span style={{ marginLeft: '5px', fontStyle: 'italic' }}>
+                    ({p.observacion})
+                  </span>
+                )}
               </li>
             ))}
           </ul>
         </>
       )}
+
       <p>-------------------------------------------------</p>
       <p><strong>TOTAL: {formatoCLP.format(total)}</strong></p>
 

@@ -7,7 +7,11 @@ const ProductoSchema = new mongoose.Schema({
   precio: Number,
   cantidad: Number,
   lugar_preparacion: String,
-}, { _id: false }); // evita que Mongoose genere un _id adicional
+  observacion: {
+    type: String,
+    default: ''
+  }
+}, { _id: false });
 
 const PedidoSchema = new mongoose.Schema({
   cliente: String,

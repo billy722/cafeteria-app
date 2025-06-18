@@ -15,6 +15,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   const [filtro, setFiltro] = useState('');
   const [productoSeleccionado, setProductoSeleccionado] = useState('');
   const [cantidad, setCantidad] = useState(1);
+  const [observacion, setObservacion] = useState('');
 
   useEffect(() => {
     fetch('https://cafeteria-server-prod.onrender.com/api/productos')
@@ -48,6 +49,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
     const nuevoProducto = {
       ...producto,
       cantidad: Number(cantidad),
+      observacion: observacion.trim(), // si está vacío no pasa nada
     };
 
     const key = producto.lugar_preparacion === 'Mesón' ? 'productos_meson' : 'productos_cocina';
@@ -58,6 +60,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
 
     setProductoSeleccionado('');
     setCantidad(1);
+    setObservacion('');
   };
 
   const handleEliminarProducto = (id, lugar) => {
@@ -130,25 +133,30 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
   );
 
   const renderListaProductos = (lista, lugar) => (
-    <ul>
-      {lista.map(p => (
-        <li key={p._id}>
-          <input
-            type="number"
-            value={p.cantidad}
-            min={1}
-            onChange={(e) =>
-              handleModificarCantidad(p._id, lugar, e.target.value)
-            }
-            style={{ width: '50px', margin: '0 5px' }}
-          />
-          <span>{p.nombre}</span>
-          <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
-            X
-          </button>
-        </li>
-      ))}
-    </ul>
+  <ul>
+    {lista.map(p => (
+      <li key={p._id}>
+        <input
+          type="number"
+          value={p.cantidad}
+          min={1}
+          onChange={(e) =>
+            handleModificarCantidad(p._id, lugar, e.target.value)
+          }
+          style={{ width: '50px', margin: '0 5px' }}
+        />
+        <span>{p.nombre}</span>
+        {p.observacion && (
+          <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
+            ({p.observacion})
+          </span>
+        )}
+        <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
+          X
+        </button>
+      </li>
+    ))}
+  </ul>
   );
 
   return (
@@ -196,6 +204,12 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           value={cantidad}
           onChange={(e) => setCantidad(e.target.value)}
           placeholder="Cantidad"
+        />
+        <input
+          type="text"
+          value={observacion}
+          onChange={(e) => setObservacion(e.target.value)}
+          placeholder="Observación (opcional)"
         />
         <button type="button" onClick={handleAgregarProducto}>Agregar Producto</button>
 
