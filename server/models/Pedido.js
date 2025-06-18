@@ -23,6 +23,10 @@ const PedidoSchema = new mongoose.Schema({
     enum: ['pendiente', 'entregado', 'pagado'],
     default: 'pendiente',
   },
+  fecha_creacion: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model('Pedido', PedidoSchema);

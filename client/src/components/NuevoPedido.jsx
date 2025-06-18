@@ -152,7 +152,7 @@ function NuevoPedido({ onPedidoCreado, pedidoEditando, setPedidoEditando }) {
           </span>
         )}
         <button className='boton-x' onClick={() => handleEliminarProducto(p._id, lugar)}>
-          X
+          x
         </button>
       </li>
     ))}
