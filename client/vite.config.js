@@ -1,12 +1,18 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  preview: {
-    port: process.env.PORT || 4173,
-    host: true,
-    allowedHosts: ['cafeteria-client-prod.onrender.com']
-  }
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'public/_redirects',
+          dest: './'
+        }
+      ]
+    })
+  ]
 })
