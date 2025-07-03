@@ -1,8 +1,12 @@
 // App.jsx
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import Header from "./components/Header";
 import NuevoPedido from './components/NuevoPedido';
 import ListaPedidos from './components/ListaPedidos';
+import CartaPublica from './components/CartaPublica'; // Importa tu carta pública
+
 import './App.css';
 
 function App() {
@@ -11,27 +15,40 @@ function App() {
 
   const siNuevoPedidoCreado = () => {
     setActualizar(!actualizar);
-    setPedidoEditando(null); // limpiar después de editar
+    setPedidoEditando(null);
   };
 
   return (
-    <div>
-      <Header />
-      <div className='contenedor-principal'>
-        <NuevoPedido
-          onPedidoCreado={siNuevoPedidoCreado}
-          pedidoEditando={pedidoEditando}
-          setPedidoEditando={setPedidoEditando}
+    <Router>
+      <Routes>
+        {/* Ruta principal con la app de pedidos */}
+        <Route
+          path="/"
+          element={
+            <div>
+              <Header />
+              <div className="contenedor-principal">
+                <NuevoPedido
+                  onPedidoCreado={siNuevoPedidoCreado}
+                  pedidoEditando={pedidoEditando}
+                  setPedidoEditando={setPedidoEditando}
+                />
+                <div className="seccion-derecha">
+                  <ListaPedidos
+                    actualizar={actualizar}
+                    setActualizar={setActualizar}
+                    setPedidoEditando={setPedidoEditando}
+                  />
+                </div>
+              </div>
+            </div>
+          }
         />
-        <div className='seccion-derecha'>
-          <ListaPedidos
-            actualizar={actualizar}
-            setActualizar={setActualizar}
-            setPedidoEditando={setPedidoEditando}
-          />
-        </div>
-      </div>
-    </div>
+
+        {/* Ruta pública para mostrar la carta al cliente */}
+        <Route path="/carta" element={<CartaPublica />} />
+      </Routes>
+    </Router>
   );
 }
 
