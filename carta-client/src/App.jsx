@@ -24,7 +24,7 @@ function App() {
     return acc;
   }, {});
 
-  const categoriasExcluidas = ['Pan', 'Agregados'];
+  const categoriasExcluidas = ['pan', 'agregado'];
 
   return (
     <div className="carta">
