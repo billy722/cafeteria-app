@@ -15,7 +15,6 @@ function App() {
       .catch(err => console.error('Error al cargar productos', err));
   }, []);
 
-  // Agrupar productos por categoría
   const productosPorCategoria = productos.reduce((acc, producto) => {
     const categoria = producto.categoria || 'Sin categoría';
     if (!acc[categoria]) {
@@ -25,21 +24,25 @@ function App() {
     return acc;
   }, {});
 
+  const categoriasExcluidas = ['Pan', 'Agregados'];
+
   return (
     <div className="carta">
-      <h1>Carta de Ruka Magnolia</h1>
-      {Object.keys(productosPorCategoria).map((categoria) => (
-        <div key={categoria} className="categoria">
-          <h2>{categoria}</h2>
-          <ul>
-            {productosPorCategoria[categoria].map((producto) => (
-              <li key={producto._id}>
-                <strong>{producto.nombre}</strong> — ${producto.precio}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <h1>Carta Ruka Magnolia</h1>
+      {Object.entries(productosPorCategoria)
+        .filter(([categoria]) => !categoriasExcluidas.includes(categoria))
+        .map(([categoria, productos]) => (
+          <div key={categoria} className="categoria">
+            <h2>{categoria}</h2>
+            <ul>
+              {productos.map((producto) => (
+                <li key={producto._id}>
+                  <strong>{producto.nombre}</strong> — ${new Intl.NumberFormat('es-CL').format(producto.precio)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
     </div>
   );
 }
