@@ -38,7 +38,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
     const productos = [...pedido.productos_meson, ...pedido.productos_cocina];
 
     const productosTexto = productos.map(p =>
-      `${p.nombre} x${p.cantidad} - ${formatoCLP.format((p.precio || 0) * p.cantidad)}`
+      `${p.nombre} \n x${p.cantidad} - ${formatoCLP.format((p.precio || 0) * p.cantidad)}`
     ).join('\n');
 
     const total = productos.reduce((acc, p) => acc + (p.precio || 0) * p.cantidad, 0);
