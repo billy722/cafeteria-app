@@ -19,7 +19,7 @@ function ListaPedidos({ actualizar, setActualizar, setPedidoEditando }) {
           const nuevosIds = new Set(data.map(p => p._id));
           const prevIds = pedidosPreviosIds.current;
 
-          // Detectamos si hay algún ID nuevo
+          // Detectar pedidos nuevos
           const idsNuevos = [...nuevosIds].filter(id => !prevIds.has(id));
 
           if (prevIds.size > 0 && idsNuevos.length > 0) {
@@ -53,12 +53,13 @@ function ListaPedidos({ actualizar, setActualizar, setPedidoEditando }) {
     }
   };
 
-  const actualizarEstado = async (id, nuevoEstado) => {
+  // AHORA acepta medioPago como tercer argumento
+  const actualizarEstado = async (id, nuevoEstado, medioPago) => {
     try {
       const res = await fetch(`https://cafeteria-server-prod.onrender.com/api/pedidos/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: nuevoEstado }),
+        body: JSON.stringify({ estado: nuevoEstado, medioPago }),
       });
 
       if (res.ok) {

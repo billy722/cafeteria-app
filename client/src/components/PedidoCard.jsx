@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import './PedidoCard.css';
 
 function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado }) {
   if (pedido.estado === 'pagado') return null;
+
+  const [medioPago, setMedioPago] = useState(pedido.medioPago || '');
 
   const formatoCLP = new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -17,7 +20,12 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
 
   const handleCambiarEstado = () => {
     const nuevoEstado = pedido.estado === 'pendiente' ? 'entregado' : 'pagado';
-    onActualizarEstado(pedido._id, nuevoEstado);
+    // Solo pedimos medio de pago cuando se pasa a "pagado"
+    if (nuevoEstado === 'pagado' && !medioPago) {
+      alert('Seleccione un medio de pago antes de pagar');
+      return;
+    }
+    onActualizarEstado(pedido._id, nuevoEstado, medioPago);
   };
 
   const colorClase =
@@ -28,7 +36,6 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       : '';
 
   const todosLosProductos = [...pedido.productos_meson, ...pedido.productos_cocina];
-
   const total = todosLosProductos.reduce(
     (acc, prod) => acc + (prod.precio || 0) * prod.cantidad,
     0
@@ -37,11 +44,17 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
   const handleImprimir = (pedido) => {
     const productos = [...pedido.productos_meson, ...pedido.productos_cocina];
 
-    const productosTexto = productos.map(p =>
-      `${p.nombre} \n x${p.cantidad} - ${formatoCLP.format((p.precio || 0) * p.cantidad)}`
-    ).join('\n');
+    const productosTexto = productos
+      .map(
+        p =>
+          `${p.nombre} \n x${p.cantidad} - ${formatoCLP.format((p.precio || 0) * p.cantidad)}`
+      )
+      .join('\n');
 
-    const total = productos.reduce((acc, p) => acc + (p.precio || 0) * p.cantidad, 0);
+    const total = productos.reduce(
+      (acc, p) => acc + (p.precio || 0) * p.cantidad,
+      0
+    );
 
     const ventana = window.open('', '', 'width=300,height=600');
 
@@ -85,6 +98,8 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
             <pre>${productosTexto}</pre>
             <div class="linea"></div>
             <p><strong>Total:</strong> ${formatoCLP.format(total)}</p>
+            <div class="linea"></div>
+            <p><strong>Medio de pago:</strong> ${pedido.medioPago}</p>
             <div class="linea"></div>
             <p><strong>¡Gracias por su visita!</strong></p>
           </div>
@@ -149,13 +164,38 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       <p>-------------------------------------------------</p>
       <p><strong>TOTAL: {formatoCLP.format(total)}</strong></p>
 
+      {/* Selector de medio de pago solo en estado ENTREGADO */}
+      {pedido.estado === 'entregado' && (
+        <div className="medio-pago">
+          <label>Medio de pago: </label>
+          <select
+            value={medioPago}
+            onChange={(e) => setMedioPago(e.target.value)}
+          >
+            <option value="">Seleccione...</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta">Débito</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
+      )}
+
       <div className="botones">
-        <button className={`btn-estado ${colorClase}`} onClick={handleCambiarEstado}>
+        <button
+          className={`btn-estado ${colorClase}`}
+          onClick={handleCambiarEstado}
+        >
           {pedido.estado === 'pendiente' ? 'Entregar' : 'Pagar'}
         </button>
-        <button onClick={() => setPedidoEditando(pedido)} className="btn-editar">Editar</button>
-        <button onClick={() => handleImprimir(pedido)} className="btn-imprimir">Imprimir</button>
-        <button onClick={handleEliminar} className="btn-eliminar">Eliminar</button>
+        <button onClick={() => setPedidoEditando(pedido)} className="btn-editar">
+          Editar
+        </button>
+        <button onClick={() => handleImprimir(pedido)} className="btn-imprimir">
+          Imprimir
+        </button>
+        <button onClick={handleEliminar} className="btn-eliminar">
+          Eliminar
+        </button>
       </div>
     </div>
   );
