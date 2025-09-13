@@ -23,6 +23,11 @@ const PedidoSchema = new mongoose.Schema({
     enum: ['pendiente', 'entregado', 'pagado'],
     default: 'pendiente',
   },
+  medioPago: {
+    type: String,
+    enum: ['efectivo', 'debito', 'credito', 'transferencia', ''],
+    default: '',           // permite vacío hasta que se pague
+  },
   fecha_creacion: {
     type: Date,
     default: Date.now
