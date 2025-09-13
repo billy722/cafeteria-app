@@ -26,7 +26,8 @@ const PedidoSchema = new mongoose.Schema({
   fecha_creacion: {
     type: Date,
     default: Date.now
-  }
+  },
+  medioPago: { type: String, enum: ['Efectivo','Débito','Crédito','Transferencia'], default: '' }
 });
 
 module.exports = mongoose.model('Pedido', PedidoSchema);
