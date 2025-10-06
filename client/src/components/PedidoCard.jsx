@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import './PedidoCard.css';
 
-function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado }) {
+function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado, onRecargarPedidos }) {
   if (pedido.estado === 'pagado') return null;
 
   const [medioPago, setMedioPago] = useState(pedido.medioPago || '');
+  const [imprimiendo, setImprimiendo] = useState(false); // Para desactivar botón mientras imprime
 
   const formatoCLP = new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -20,7 +21,6 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
 
   const handleCambiarEstado = () => {
     const nuevoEstado = pedido.estado === 'pendiente' ? 'entregado' : 'pagado';
-    // Solo pedimos medio de pago cuando se pasa a "pagado"
     if (nuevoEstado === 'pagado' && !medioPago) {
       alert('Seleccione un medio de pago antes de pagar');
       return;
@@ -42,6 +42,8 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
   );
 
   const handleImprimir = (pedido) => {
+    setImprimiendo(true);
+
     const productos = [...pedido.productos_meson, ...pedido.productos_cocina];
 
     const productosTexto = productos
@@ -63,29 +65,10 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
         <head>
           <title>Cuenta</title>
           <style>
-            body {
-              font-family: monospace;
-              font-size: 12px;
-              padding: 2px;
-              margin: 0;
-            }
-            .ticket {
-              width: 58mm;
-              width: 100%;
-            }
-            .linea {
-              border-top: 1px dashed #000;
-              margin: 10px 0;
-            }
-            @media print {
-              html, body {
-                height: auto;
-                overflow: hidden;
-              }
-              .no-imprimir {
-                display: none !important;
-              }
-            }
+            body { font-family: monospace; font-size: 12px; padding: 2px; margin: 0; }
+            .ticket { width: 58mm; width: 100%; }
+            .linea { border-top: 1px dashed #000; margin: 10px 0; }
+            @media print { html, body { height: auto; overflow: hidden; } .no-imprimir { display: none !important; } }
           </style>
         </head>
         <body>
@@ -97,9 +80,11 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
             <div class="linea"></div>
             <pre>${productosTexto}</pre>
             <div class="linea"></div>
-            <p><strong>Total:</strong> ${formatoCLP.format(total)}</p>
+            <p><strong>MONTO DE COMPRA:</strong> ${formatoCLP.format(total)}</p>
+            <p><strong>Propina sugerida 10%:</strong> ${formatoCLP.format(total*0.10)}</p>
+            <p><strong>TOTAL + PROPINA:</strong> ${formatoCLP.format(total+(total*0.10))}</p>
             <div class="linea"></div>
-            <p><strong>Medio de pago:</strong> ${pedido.medioPago}</p>
+            <p><strong>Medio de pago:</strong> ${medioPago}</p>
             <div class="linea"></div>
             <p><strong>¡Gracias por su visita!</strong></p>
           </div>
@@ -116,6 +101,34 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
     ventana.document.open();
     ventana.document.write(contenido);
     ventana.document.close();
+
+    setImprimiendo(false);
+  };
+
+  // 🔹 Actualización del medio de pago
+  const handleCambiarMedioPago = async (e) => {
+    const nuevoMedio = e.target.value;
+
+    try {
+      const response = await fetch(
+        `https://cafeteria-server-prod.onrender.com/api/pedidos/${pedido._id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ medioPago: nuevoMedio }),
+        }
+      );
+
+      if (response.ok) {
+        setMedioPago(nuevoMedio); // ✅ Actualizamos solo si response.ok
+        alert("✅ Medio de pago actualizado correctamente");
+      } else {
+        throw new Error('Error al actualizar medio de pago');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('❌ No se pudo guardar el medio de pago');
+    }
   };
 
   return (
@@ -162,24 +175,26 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
       )}
 
       <p>-------------------------------------------------</p>
-      <p><strong>TOTAL: {formatoCLP.format(total)}</strong></p>
 
       {/* Selector de medio de pago solo en estado ENTREGADO */}
       {pedido.estado === 'entregado' && (
         <div className="medio-pago">
           <label>Medio de pago: </label>
-          <select
-            value={medioPago}
-            onChange={(e) => setMedioPago(e.target.value)}
-          >
+          <select value={medioPago} onChange={handleCambiarMedioPago}>
             <option value="">Seleccione...</option>
-            <option value="efectivo">Efectivo</option>
-            <option value="tarjeta">Débito</option>
-            <option value="transferencia">Transferencia</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Debito">Débito</option>
+            <option value="Transferencia">Transferencia</option>
           </select>
         </div>
       )}
 
+      <p>-------------------------------------------------</p>
+      {/* <p><strong>TOTAL: {formatoCLP.format(total)}</strong></p> */}
+      <p><strong>Monto de compra:</strong> {formatoCLP.format(total)}</p>
+      <p><strong>Propina sugerida 10%:</strong> {formatoCLP.format(total*0.10)}</p>
+      <p><strong>Total + propina:</strong> {formatoCLP.format(total+(total*0.10))}</p>
+      
       <div className="botones">
         <button
           className={`btn-estado ${colorClase}`}
@@ -190,8 +205,13 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado 
         <button onClick={() => setPedidoEditando(pedido)} className="btn-editar">
           Editar
         </button>
-        <button onClick={() => handleImprimir(pedido)} className="btn-imprimir">
-          Imprimir
+        <button
+          id="btn_imprimir"
+          onClick={() => handleImprimir(pedido)}
+          className="btn-imprimir"
+          disabled={imprimiendo} // ✅ Desactivamos mientras imprime
+        >
+          {imprimiendo ? 'Imprimiendo...' : 'Imprimir'}
         </button>
         <button onClick={handleEliminar} className="btn-eliminar">
           Eliminar
