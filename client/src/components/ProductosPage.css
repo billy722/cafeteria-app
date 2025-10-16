@@ -1,0 +1,49 @@
+.contenedor-productos {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff8f0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  .form-producto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .form-producto input,
+  .form-producto select,
+  .form-producto button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tabla-productos button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #a0522d;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .tabla-productos button:hover {
+    opacity: 0.8;
+  }
+  

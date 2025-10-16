@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import NuevoPedido from './components/NuevoPedido';
 import ListaPedidos from './components/ListaPedidos';
 import CartaPublica from './components/CartaPublica'; // Importa tu carta pública
+import ProductosPage from './components/ProductosPage';
 
 import './App.css';
 
@@ -47,6 +48,8 @@ function App() {
 
         {/* Ruta pública para mostrar la carta al cliente */}
         <Route path="/carta" element={<CartaPublica />} />
+        <Route path="/productos" element={<ProductosPage />} />
+
       </Routes>
     </Router>
   );
