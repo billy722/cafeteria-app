@@ -1,5 +1,5 @@
 import './ProductosPage.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Header from './Header';
 
 const API_URL = 'https://cafeteria-server-prod.onrender.com/api/productos';
@@ -14,8 +14,11 @@ function ProductosPage() {
     categoria: 'Bebidas frías'
   });
   const [editando, setEditando] = useState(null);
+  const [cargando, setCargando] = useState(false);
 
-  // 🟢 Cargar productos al montar
+  const formRef = useRef(null);
+  const headerRef = useRef(null); // Referencia al header
+
   useEffect(() => {
     fetchProductos();
   }, []);
@@ -24,43 +27,49 @@ function ProductosPage() {
     const res = await fetch(`${API_URL}/todos`);
     const data = await res.json();
 
-    // 🔤 Ordenar por categoría (y dentro de cada categoría por nombre)
     const ordenados = [...data].sort((a, b) => {
-        if (a.categoria < b.categoria) return -1;
-        if (a.categoria > b.categoria) return 1;
-        return a.nombre.localeCompare(b.nombre);
+      if (a.categoria < b.categoria) return -1;
+      if (a.categoria > b.categoria) return 1;
+      return a.nombre.localeCompare(b.nombre);
     });
 
     setProductos(ordenados);
   };
 
-  // 🟢 Crear o actualizar producto
   const guardarProducto = async (e) => {
     e.preventDefault();
+    setCargando(true);
 
     const metodo = editando ? 'PUT' : 'POST';
     const url = editando ? `${API_URL}/${editando._id}` : API_URL;
 
-    const res = await fetch(url, {
-      method: metodo,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(nuevoProducto)
-    });
-
-    if (res.ok) {
-      await fetchProductos();
-      setNuevoProducto({
-        nombre: '',
-        precio: '',
-        lugar_preparacion: 'Mesón',
-        estado: true,
-        categoria: 'Bebidas frías'
+    try {
+      const res = await fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoProducto)
       });
-      setEditando(null);
+
+      if (res.ok) {
+        await fetchProductos();
+        setNuevoProducto({
+          nombre: '',
+          precio: '',
+          lugar_preparacion: 'Mesón',
+          estado: true,
+          categoria: 'Bebidas frías'
+        });
+        setEditando(null);
+      } else {
+        console.error('Error al guardar producto');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setCargando(false);
     }
   };
 
-  // 🟢 Eliminar producto
   const eliminarProducto = async (id) => {
     if (confirm('¿Seguro que deseas eliminar este producto?')) {
       const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
@@ -68,19 +77,38 @@ function ProductosPage() {
     }
   };
 
-  // 🟢 Cargar producto en formulario para editar
   const editarProducto = (prod) => {
     setNuevoProducto(prod);
     setEditando(prod);
+
+    // Scroll al header
+    setTimeout(() => {
+      headerRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const limpiarFormulario = () => {
+    setNuevoProducto({
+      nombre: '',
+      precio: '',
+      lugar_preparacion: 'Mesón',
+      estado: true,
+      categoria: 'Bebidas frías'
+    });
+    setEditando(null);
   };
 
   return (
     <div>
-      <Header />
+      {/* Ref en un div envolviendo Header */}
+      <div ref={headerRef}>
+        <Header />
+      </div>
+
       <div className="contenedor-productos">
         <h2>Gestión de Productos</h2>
 
-        <form onSubmit={guardarProducto} className="form-producto">
+        <form ref={formRef} onSubmit={guardarProducto} className="form-producto">
           <input
             type="text"
             placeholder="Nombre"
@@ -123,7 +151,19 @@ function ProductosPage() {
             />
             Activo
           </label>
-          <button type="submit">{editando ? 'Actualizar' : 'Agregar'}</button>
+
+          <div className="botones-formulario">
+            <button type="submit" disabled={cargando}>
+              {cargando
+                ? 'Guardando...'
+                : editando
+                ? 'Actualizar'
+                : 'Agregar'}
+            </button>
+            <button type="button" onClick={limpiarFormulario}>
+              Limpiar
+            </button>
+          </div>
         </form>
 
         <table className="tabla-productos">
