@@ -13,6 +13,7 @@ function Header(){
             <ul>
                 <li><Link to="/">Inicio</Link></li>
                 <li><Link to="/productos">Productos</Link></li>
+                <li><Link to="/codigos_descuento">Codigos Descuento</Link></li>
                 {/* Puedes agregar más páginas aquí */}
             </ul>
         </nav>
