@@ -1,8 +1,7 @@
-// server/models/Pedido.js
 const mongoose = require('mongoose');
 
 const ProductoSchema = new mongoose.Schema({
-  _id: String, // importante para mantener la referencia original
+  _id: String,
   nombre: String,
   precio: Number,
   cantidad: Number,
@@ -14,8 +13,8 @@ const ProductoSchema = new mongoose.Schema({
 }, { _id: false });
 
 const PedidoSchema = new mongoose.Schema({
-  cliente: String,
-  hora: String,
+  cliente: { type: String, required: true },
+  hora: { type: String, required: true },
   productos_meson: [ProductoSchema],
   productos_cocina: [ProductoSchema],
   estado: {
@@ -25,14 +24,16 @@ const PedidoSchema = new mongoose.Schema({
   },
   medioPago: {
     type: String,
-    enum: ['efectivo', 'tarjeta', 'transferencia', ''],
-    default: '',           // permite vacío hasta que se pague
+    enum: ['Efectivo', 'Debito', 'Transferencia', ''],
+    default: '',
   },
   fecha_creacion: {
     type: Date,
     default: Date.now
   },
-  codigoDescuento: { type: String, default: null }, // ✅ Nuevo campo
+  codigoDescuento: { type: String, default: null },
+  descuentoAplicado: { type: Number, default: 0 }, // 💰 monto del descuento en pesos
+  montoPagado: { type: Number, default: 0 } // 💵 total pagado tras descuento
 });
 
 module.exports = mongoose.model('Pedido', PedidoSchema);
