@@ -13,6 +13,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ✅ Obtener todos los productos (activos e inactivos)
+router.get('/todos', async (req, res) => {
+  try {
+    const productos = await Producto.find(); // sin filtro
+    res.json(productos);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener productos' });
+  }
+});
+
+
 // ✅ Crear un nuevo producto
 router.post('/', async (req, res) => {
   try {

@@ -21,7 +21,7 @@ function ProductosPage() {
   }, []);
 
   const fetchProductos = async () => {
-    const res = await fetch(API_URL);
+    const res = await fetch(`${API_BASE}/todos`);
     const data = await res.json();
     setProductos(data);
   };
