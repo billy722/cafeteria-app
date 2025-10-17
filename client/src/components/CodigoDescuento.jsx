@@ -5,6 +5,7 @@ import Header from './Header';
 
 const API_URL = 'https://cafeteria-server-prod.onrender.com/api/codigodescuento';
 
+
 function CodigosDescuentoPage() {
   const [codigos, setCodigos] = useState([]);
   const [nuevoCodigo, setNuevoCodigo] = useState({

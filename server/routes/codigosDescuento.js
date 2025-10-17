@@ -3,7 +3,7 @@ const router = express.Router();
 const CodigoDescuento = require('../models/CodigoDescuento');
 
 // GET todos los códigos
-router.get('/todos', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const codigos = await CodigoDescuento.find().sort({ nombre: 1 });
     res.json(codigos);
