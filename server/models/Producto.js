@@ -5,6 +5,7 @@ const productoSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
   precio: { type: Number, required: true },
   lugar_preparacion: { type: String, enum: ['Mesón', 'Cocina'], required: true },
+  categoria: { type: String, required: true },
   estado: { type: Boolean, default: true }
 });
 
