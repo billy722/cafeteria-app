@@ -23,7 +23,15 @@ function ProductosPage() {
   const fetchProductos = async () => {
     const res = await fetch(`${API_URL}/todos`);
     const data = await res.json();
-    setProductos(data);
+
+    // 🔤 Ordenar por categoría (y dentro de cada categoría por nombre)
+    const ordenados = [...data].sort((a, b) => {
+        if (a.categoria < b.categoria) return -1;
+        if (a.categoria > b.categoria) return 1;
+        return a.nombre.localeCompare(b.nombre);
+    });
+
+    setProductos(ordenados);
   };
 
   // 🟢 Crear o actualizar producto
