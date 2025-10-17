@@ -25,7 +25,7 @@ function CodigosDescuentoPage() {
 
   const fetchCodigos = async () => {
     try {
-      const res = await fetch(`${API_URL}/todos`);
+      const res = await fetch(API_URL);
       const data = await res.json();
       setCodigos(data.sort((a, b) => a.nombre.localeCompare(b.nombre)));
     } catch (error) {
@@ -96,10 +96,9 @@ function CodigosDescuentoPage() {
 
         <form ref={formRef} onSubmit={guardarCodigo} className="form-producto">
           <div>
-            <label>Código:</label>
             <input
               type="text"
-              placeholder="Ej: DESCUENTO10"
+              placeholder="CODIGO"
               value={nuevoCodigo.nombre}
               onChange={(e) => setNuevoCodigo({ ...nuevoCodigo, nombre: e.target.value })}
               required
@@ -119,7 +118,7 @@ function CodigosDescuentoPage() {
           </div>
 
           <div>
-            <label>Porcentaje de descuento:</label>
+            <label>% descuento:</label>
             <input
               type="number"
               placeholder="Ej: 10 para 10%"
