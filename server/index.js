@@ -17,6 +17,9 @@ app.use('/api/pedidos', pedidosRoute);
 const productosRoutes = require('./routes/productos');
 app.use('/api/productos', productosRoutes);
 
+const codigosDescuentoRoutes = require('./routes/codigosDescuento');
+app.use('/api/codigodescuento', codigosDescuentoRoutes);
+
 // MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))

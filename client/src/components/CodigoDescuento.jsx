@@ -24,7 +24,7 @@ function CodigosDescuentoPage() {
 
   const fetchCodigos = async () => {
     try {
-      const res = await fetch(`${API_URL}/todos`);
+      const res = await fetch(API_URL);
       const data = await res.json();
       setCodigos(data.sort((a, b) => a.nombre.localeCompare(b.nombre)));
     } catch (error) {
