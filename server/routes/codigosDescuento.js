@@ -26,8 +26,13 @@ router.get('/:id', async (req, res) => {
 // POST crear nuevo código
 router.post('/', async (req, res) => {
   try {
-    const { nombre, limiteUso } = req.body;
-    const nuevoCodigo = new CodigoDescuento({ nombre, limiteUso });
+    const { nombre, limiteUso, porcentajeDescuento } = req.body;
+    const nuevoCodigo = new CodigoDescuento({
+      nombre,
+      limiteUso,
+      porcentajeDescuento,
+      vecesUsado: 0
+    });
     const saved = await nuevoCodigo.save();
     res.status(201).json(saved);
   } catch (error) {
@@ -38,10 +43,10 @@ router.post('/', async (req, res) => {
 // PUT actualizar código
 router.put('/:id', async (req, res) => {
   try {
-    const { nombre, limiteUso, vecesUsado } = req.body;
+    const { nombre, limiteUso, porcentajeDescuento, vecesUsado } = req.body;
     const updated = await CodigoDescuento.findByIdAndUpdate(
       req.params.id,
-      { nombre, limiteUso, vecesUsado },
+      { nombre, limiteUso, porcentajeDescuento, vecesUsado },
       { new: true }
     );
     if (!updated) return res.status(404).json({ error: 'Código no encontrado' });

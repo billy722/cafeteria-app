@@ -5,12 +5,12 @@ import Header from './Header';
 
 const API_URL = 'https://cafeteria-server-prod.onrender.com/api/codigodescuento';
 
-
 function CodigosDescuentoPage() {
   const [codigos, setCodigos] = useState([]);
   const [nuevoCodigo, setNuevoCodigo] = useState({
     nombre: '',
     limiteUso: 1,
+    porcentajeDescuento: 0,
     vecesUsado: 0
   });
   const [editando, setEditando] = useState(null);
@@ -25,7 +25,7 @@ function CodigosDescuentoPage() {
 
   const fetchCodigos = async () => {
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(`${API_URL}/todos`);
       const data = await res.json();
       setCodigos(data.sort((a, b) => a.nombre.localeCompare(b.nombre)));
     } catch (error) {
@@ -79,6 +79,7 @@ function CodigosDescuentoPage() {
     setNuevoCodigo({
       nombre: '',
       limiteUso: 1,
+      porcentajeDescuento: 0,
       vecesUsado: 0
     });
     setEditando(null);
@@ -117,6 +118,21 @@ function CodigosDescuentoPage() {
             />
           </div>
 
+          <div>
+            <label>Porcentaje de descuento:</label>
+            <input
+              type="number"
+              placeholder="Ej: 10 para 10%"
+              value={nuevoCodigo.porcentajeDescuento}
+              min={0}
+              max={100}
+              onChange={(e) =>
+                setNuevoCodigo({ ...nuevoCodigo, porcentajeDescuento: parseFloat(e.target.value) })
+              }
+              required
+            />
+          </div>
+
           <div className="botones-formulario">
             <button type="submit" disabled={cargando}>
               {cargando
@@ -136,15 +152,17 @@ function CodigosDescuentoPage() {
             <tr>
               <th>Nombre</th>
               <th>Límite de uso</th>
+              <th>Porcentaje</th>
               <th>Veces usado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {codigos.map(codigo => (
+            {codigos.map((codigo) => (
               <tr key={codigo._id}>
                 <td>{codigo.nombre}</td>
                 <td>{codigo.limiteUso}</td>
+                <td>{codigo.porcentajeDescuento}%</td>
                 <td>{codigo.vecesUsado}</td>
                 <td>
                   <button onClick={() => editarCodigo(codigo)}>Editar</button>
