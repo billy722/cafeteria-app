@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Pedido = require('../models/Pedido');
+const CodigoDescuento = require('../models/CodigoDescuento'); // ✅ Importación
 
 // POST /api/pedidos
 router.post('/', async (req, res) => {

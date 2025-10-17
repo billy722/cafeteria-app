@@ -5,7 +5,9 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
   if (pedido.estado === 'pagado') return null;
 
   const [medioPago, setMedioPago] = useState(pedido.medioPago || '');
-  const [imprimiendo, setImprimiendo] = useState(false); // Para desactivar botón mientras imprime
+  const [imprimiendo, setImprimiendo] = useState(false);
+  const [codigoInput, setCodigoInput] = useState('');
+  const [descuento, setDescuento] = useState(0);
 
   const formatoCLP = new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -48,8 +50,10 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
 
     const productosTexto = productos
       .map(
-        p =>
-          `${p.nombre} \n x${p.cantidad} - ${formatoCLP.format((p.precio || 0) * p.cantidad)}`
+        (p) =>
+          `${p.nombre} \n x${p.cantidad} - ${formatoCLP.format(
+            (p.precio || 0) * p.cantidad
+          )}`
       )
       .join('\n');
 
@@ -58,6 +62,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
       0
     );
 
+    const totalConDescuento = total - (total * descuento) / 100;
     const ventana = window.open('', '', 'width=300,height=600');
 
     const contenido = `
@@ -81,8 +86,18 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
             <pre>${productosTexto}</pre>
             <div class="linea"></div>
             <p><strong>MONTO DE COMPRA:</strong> ${formatoCLP.format(total)}</p>
-            <p><strong>Propina sugerida 10%:</strong> ${formatoCLP.format(total*0.10)}</p>
-            <p><strong>TOTAL + PROPINA:</strong> ${formatoCLP.format(total+(total*0.10))}</p>
+            ${
+              descuento > 0
+                ? `<p><strong>Descuento aplicado:</strong> ${descuento}%</p>
+                   <p><strong>Nuevo total:</strong> ${formatoCLP.format(totalConDescuento)}</p>`
+                : ''
+            }
+            <p><strong>Propina sugerida 10%:</strong> ${formatoCLP.format(
+              totalConDescuento * 0.1
+            )}</p>
+            <p><strong>TOTAL + PROPINA:</strong> ${formatoCLP.format(
+              totalConDescuento + totalConDescuento * 0.1
+            )}</p>
             <div class="linea"></div>
             <p><strong>Medio de pago:</strong> ${medioPago}</p>
             <div class="linea"></div>
@@ -105,10 +120,8 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
     setImprimiendo(false);
   };
 
-  // 🔹 Actualización del medio de pago
   const handleCambiarMedioPago = async (e) => {
     const nuevoMedio = e.target.value;
-
     try {
       const response = await fetch(
         `https://cafeteria-server-prod.onrender.com/api/pedidos/${pedido._id}`,
@@ -118,10 +131,9 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
           body: JSON.stringify({ medioPago: nuevoMedio }),
         }
       );
-
       if (response.ok) {
-        setMedioPago(nuevoMedio); // ✅ Actualizamos solo si response.ok
-        alert("✅ Medio de pago actualizado correctamente");
+        setMedioPago(nuevoMedio);
+        alert('✅ Medio de pago actualizado correctamente');
       } else {
         throw new Error('Error al actualizar medio de pago');
       }
@@ -131,16 +143,51 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
     }
   };
 
+  // ✅ Aplicar código de descuento
+  const handleAplicarCodigo = async (pedidoId) => {
+    if (!codigoInput.trim()) {
+      alert('Ingrese un código de descuento');
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://cafeteria-server-prod.onrender.com/api/pedidos/${pedidoId}/aplicar-descuento`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codigo: codigoInput }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Error al aplicar descuento');
+
+      alert('✅ Código aplicado correctamente');
+      setDescuento(data.descuento);
+      onRecargarPedidos();
+    } catch (err) {
+      alert(`❌ ${err.message}`);
+    }
+  };
+
   return (
     <div className={`pedido-card ${colorClase}`}>
-      <p><strong>CLIENTE: {pedido.cliente}</strong></p>
+      <p>
+        <strong>CLIENTE: {pedido.cliente}</strong>
+      </p>
       <p>-------------------------------------------------</p>
-      <p><strong>HORA: {pedido.hora}</strong></p>
+      <p>
+        <strong>HORA: {pedido.hora}</strong>
+      </p>
       <p>-------------------------------------------------</p>
 
       {pedido.productos_meson.length > 0 && (
         <>
-          <p><strong>MESÓN:</strong></p>
+          <p>
+            <strong>MESÓN:</strong>
+          </p>
           <ul>
             {pedido.productos_meson.map((p, i) => (
               <li key={p._id || `meson-${i}`}>
@@ -158,7 +205,9 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
 
       {pedido.productos_cocina.length > 0 && (
         <>
-          <p><strong>COCINA:</strong></p>
+          <p>
+            <strong>COCINA:</strong>
+          </p>
           <ul>
             {pedido.productos_cocina.map((p, i) => (
               <li key={p._id || `cocina-${i}`}>
@@ -176,7 +225,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
 
       <p>-------------------------------------------------</p>
 
-      {/* Selector de medio de pago solo en estado ENTREGADO */}
+      {/* Medio de pago y código de descuento */}
       {pedido.estado === 'entregado' && (
         <div className="medio-pago">
           <label>Medio de pago: </label>
@@ -186,15 +235,43 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
             <option value="Debito">Débito</option>
             <option value="Transferencia">Transferencia</option>
           </select>
+
+          <div className="codigo-descuento" style={{ marginTop: '10px' }}>
+            <label>Código de descuento:</label>
+            <input
+              type="text"
+              placeholder="Ej: DESCUENTO10"
+              value={codigoInput}
+              onChange={(e) => setCodigoInput(e.target.value)}
+            />
+            <button onClick={() => handleAplicarCodigo(pedido._id)}>
+              Aplicar
+            </button>
+          </div>
         </div>
       )}
 
       <p>-------------------------------------------------</p>
-      {/* <p><strong>TOTAL: {formatoCLP.format(total)}</strong></p> */}
-      <p><strong>Monto de compra:</strong> {formatoCLP.format(total)}</p>
-      <p><strong>Propina sugerida 10%:</strong> {formatoCLP.format(total*0.10)}</p>
-      <p><strong>Total + propina:</strong> {formatoCLP.format(total+(total*0.10))}</p>
-      
+
+      <p>
+        <strong>Monto de compra:</strong> {formatoCLP.format(total)}
+      </p>
+      {descuento > 0 && (
+        <p>
+          <strong>Descuento aplicado:</strong> {descuento}%
+        </p>
+      )}
+      <p>
+        <strong>Propina sugerida 10%:</strong>{' '}
+        {formatoCLP.format((total - (total * descuento) / 100) * 0.1)}
+      </p>
+      <p>
+        <strong>Total + propina:</strong>{' '}
+        {formatoCLP.format(
+          total - (total * descuento) / 100 + (total - (total * descuento) / 100) * 0.1
+        )}
+      </p>
+
       <div className="botones">
         <button
           className={`btn-estado ${colorClase}`}
@@ -209,7 +286,7 @@ function PedidoCard({ pedido, onEliminar, setPedidoEditando, onActualizarEstado,
           id="btn_imprimir"
           onClick={() => handleImprimir(pedido)}
           className="btn-imprimir"
-          disabled={imprimiendo} // ✅ Desactivamos mientras imprime
+          disabled={imprimiendo}
         >
           {imprimiendo ? 'Imprimiendo...' : 'Imprimir'}
         </button>
