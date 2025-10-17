@@ -31,7 +31,8 @@ const PedidoSchema = new mongoose.Schema({
   fecha_creacion: {
     type: Date,
     default: Date.now
-  }
+  },
+  codigoDescuento: { type: String, default: null }, // ✅ Nuevo campo
 });
 
 module.exports = mongoose.model('Pedido', PedidoSchema);

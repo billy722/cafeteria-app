@@ -45,5 +45,43 @@ router.get('/', async (req, res) => {
       res.status(500).json({ mensaje: 'Error al actualizar el pedido' });
     }
   });
+
+  // ✅ Aplicar código de descuento
+router.post('/:id/aplicar-descuento', async (req, res) => {
+  try {
+    const { codigo } = req.body;
+    const pedidoId = req.params.id;
+
+    // Buscar el código en base de datos
+    const codigoDoc = await CodigoDescuento.findOne({ nombre: codigo.trim() });
+
+    if (!codigoDoc) {
+      return res.status(404).json({ error: 'Código no encontrado' });
+    }
+
+    if (codigoDoc.vecesUsado >= codigoDoc.limiteUso) {
+      return res.status(400).json({ error: 'El código ya alcanzó su límite de uso' });
+    }
+
+    // Sumar 1 al uso
+    codigoDoc.vecesUsado += 1;
+    await codigoDoc.save();
+
+    // Guardar el código en el pedido
+    const pedidoActualizado = await Pedido.findByIdAndUpdate(
+      pedidoId,
+      { codigoDescuento: codigoDoc.nombre },
+      { new: true }
+    );
+
+    res.json({
+      message: 'Código aplicado correctamente',
+      descuento: codigoDoc.porcentajeDescuento,
+      pedido: pedidoActualizado,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
   
 module.exports = router;
